@@ -1,0 +1,10 @@
+---
+# openldap_server/vars/vars_Debian.yml
+
+# OpenLDAP server packages to be installed
+openldap_server_packages:
+  - 'slapd'
+  - 'ldap-utils'
+
+# OpenLDAP server services
+openldap_server_service: 'slapd'
