@@ -1,0 +1,11 @@
+---
+# openldap_server/handlers/main.yml
+
+- name: 'Stop the OpenLDAP server service'
+  service:
+    name: "{{ openldap_server_service }}"
+    state: 'stopped'
+    masked: 'false'
+  tags:
+    - 'installation'
+
