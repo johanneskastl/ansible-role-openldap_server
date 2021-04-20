@@ -1,0 +1,16 @@
+---
+# openldap_server/tasks/install_packages.yml
+
+- name: 'Install OpenLDAP server packages'
+  package:
+    name: "{{ openldap_server_packages }}"
+    state: 'present'
+  notify:
+    - 'Stop the OpenLDAP server service'
+  tags:
+    - 'installation'
+
+- name: 'Force all notified handlers to run at this point, not waiting for normal sync points'
+  meta: flush_handlers
+  tags:
+    - 'installation'
