@@ -14,3 +14,21 @@
   include_tasks: install_packages.yml
   tags:
     - 'installation'
+
+- name: 'Configure the OpenLDAP service using a static configuration'
+  include_tasks: openldap_static_configuration.yml
+  when: 'use_static_configuration | bool'
+  tags:
+    - 'configuration'
+
+- name: 'Configure the OpenLDAP service using a dynamic configuration'
+  include_tasks: openldap_dynamic_configuration.yml
+  when: 'not use_static_configuration | bool'
+  tags:
+    - 'configuration'
+
+- name: 'Start and enable the OpenLDAP service'
+  service:
+    name: "{{ openldap_server_service }}"
+    state: 'started'
+    enabled: 'true'
