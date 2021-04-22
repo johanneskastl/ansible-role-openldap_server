@@ -1,0 +1,4 @@
+---
+# openldap_server/defaults/main.yml
+
+use_static_configuration: 'false'
