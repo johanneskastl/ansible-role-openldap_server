@@ -1,0 +1,21 @@
+---
+# openldap_server/vars/vars_RedHat.yml
+
+# OpenLDAP server packages to be installed
+openldap_server_packages:
+  - 'openldap-servers'
+  - 'openldap-clients'
+
+# OpenLDAP server services
+openldap_server_service: 'slapd'
+
+# path to ldap directories
+path_to_openldap_etc_directory: '/etc/openldap/'
+path_to_openldap_var_directory: '/var/lib/ldap/'
+
+# path to ldap.conf
+path_to_ldap_conf: '/etc/openldap/ldap.conf'
+
+# OpenLDAP user and group
+openldap_user: 'ldap'
+openldap_group: 'ldap'
