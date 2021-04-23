@@ -22,20 +22,22 @@
   tags:
     - 'installation'
 
-- name: 'Change to mdb on RedHat/CentOS/...'
-  block:
-    - name: 'Remove file olcDatabase={2}hdb.ldif'
-      file:
-        path: '/etc/openldap/slapd.d/cn=config/olcDatabase={2}hdb.ldif'
-        state: 'absent'
+- name: 'Remove file olcDatabase={2}hdb.ldif'
+  file:
+    path: '/etc/openldap/slapd.d/cn=config/olcDatabase={2}hdb.ldif'
+    state: 'absent'
+  when: 'ansible_os_family == "RedHat"'
+  tags:
+    - 'installation'
 
-    - name: 'Create olcDatabase={2}mdb.ldif'
-      template:
-        src: 'olcDatabase2mdb.ldif.j2'
-        dest: '/etc/openldap/slapd.d/cn=config/olcDatabase={2}mdb.ldif'
-        owner: "{{ openldap_user }}"
-        group: "{{ openldap_group }}"
-        mode: '0600'
+- name: 'Create olcDatabase={2}mdb.ldif'
+  template:
+    src: 'olcDatabase2mdb.ldif.j2'
+    dest: '/etc/openldap/slapd.d/cn=config/olcDatabase={2}mdb.ldif'
+    owner: "{{ openldap_user }}"
+    group: "{{ openldap_group }}"
+    mode: '0600'
+  when: 'ansible_os_family == "RedHat"'
   tags:
     - 'installation'
 
