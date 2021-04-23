@@ -39,6 +39,11 @@
   tags:
     - 'configuration'
 
+- name: 'Force all notified handlers to run at this point, not waiting for normal sync points'
+  meta: flush_handlers
+  tags:
+    - 'installation'
+
 - name: 'Start and enable the OpenLDAP service'
   service:
     name: "{{ openldap_server_service }}"
