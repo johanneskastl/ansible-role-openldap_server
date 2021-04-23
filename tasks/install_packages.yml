@@ -8,6 +8,9 @@
   notify:
     - 'Stop the OpenLDAP server service'
     - 'Remove database files'
+    - 'Remove file olcDatabase={2}hdb.ldif'
+    - 'Create olcDatabase={2}mdb.ldif'
+    - 'Remove TLS settings from cn=config.ldif'
 
 - name: 'Force all notified handlers to run at this point, not waiting for normal sync points'
   meta: flush_handlers
