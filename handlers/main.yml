@@ -68,7 +68,7 @@
 
 - name: 'Set olcRootPW via ldapmodify'
   command:
-    cmd: 'ldapmodify -Q -Y EXTERNAL -H ldapi:/// -f /root/OpenLDAP_configuration_via_ansible/rootDN_password_hash_base64.ldif'
+    cmd: 'ldapmodify -Q -Y EXTERNAL -H ldapi:/// -f /root/OpenLDAP_configuration_via_ansible/rootDN_password_hash.ldif'
   when: 'grep_for_olcRootPW.stdout == ""'
   tags:
     - 'configuration'
