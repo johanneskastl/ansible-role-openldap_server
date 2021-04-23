@@ -1,0 +1,32 @@
+---
+# openldap_server/tasks/openldap_dynamic_configuration.yml
+
+- name: 'Create directory /root/OpenLDAP_configuration_via_ansible/'
+  file:
+    path: '/root/OpenLDAP_configuration_via_ansible/'
+    state: 'directory'
+    owner: 'root'
+    group: 'root'
+    mode: '0700'
+  notify:
+    - 'Fix permissions on database files'
+    - 'Restart the OpenLDAP server service'
+
+- name: 'Create ldif file for import via slapadd'
+  template:
+    src: 'initial_state_via_slapadd.ldif.j2'
+    dest: '/root/OpenLDAP_configuration_via_ansible/initial_state_via_slapadd.ldif'
+    owner: 'root'
+    group: 'root'
+    mode: '0600'
+  notify:
+    - 'Fix permissions on database files'
+    - 'Restart the OpenLDAP server service'
+
+- name: 'Import the initial state via slapadd'
+  command:
+    cmd: '/usr/sbin/slapadd -l /root/OpenLDAP_configuration_via_ansible/initial_state_via_slapadd.ldif'
+    creates: '/var/lib/ldap/data.mdb'
+  notify:
+    - 'Fix permissions on database files'
+    - 'Restart the OpenLDAP server service'
