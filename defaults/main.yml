@@ -2,6 +2,7 @@
 # openldap_server/defaults/main.yml
 
 use_static_configuration: 'false'
+use_tls: 'false'
 
 #
 default_base_dn: 'dc=training,dc=b1-systems,dc=de'
