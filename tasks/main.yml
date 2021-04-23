@@ -16,13 +16,21 @@
     - 'installation'
 
 - name: 'Configure the OpenLDAP service using a static configuration'
-  include_tasks: openldap_static_configuration.yml
+  include_tasks:
+    file: openldap_static_configuration.yml
+    apply:
+      tags:
+        - 'configuration'
   when: 'use_static_configuration | bool'
   tags:
     - 'configuration'
 
 - name: 'Configure the OpenLDAP service using a dynamic configuration'
-  include_tasks: openldap_dynamic_configuration.yml
+  include_tasks:
+    file: openldap_dynamic_configuration.yml
+    apply:
+      tags:
+        - 'configuration'
   when: 'not use_static_configuration | bool'
   tags:
     - 'configuration'
