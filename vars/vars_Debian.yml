@@ -15,3 +15,7 @@ path_to_openldap_var_directory: '/var/lib/ldap/'
 
 # path to ldap.conf
 path_to_ldap_conf: '/etc/ldap/ldap.conf'
+
+# OpenLDAP user and group
+openldap_user: 'openldap'
+openldap_group: 'openldap'
