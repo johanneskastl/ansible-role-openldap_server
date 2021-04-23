@@ -44,8 +44,12 @@
   tags:
     - 'installation'
 
-- name: 'Start and enable the OpenLDAP service'
+- name: 'Enable the OpenLDAP service'
+  service:
+    name: "{{ openldap_server_service }}"
+    enabled: 'true'
+
+- name: 'Start the OpenLDAP service'
   service:
     name: "{{ openldap_server_service }}"
     state: 'started'
-    enabled: 'true'
