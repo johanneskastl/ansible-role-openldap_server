@@ -12,3 +12,12 @@
   tags:
     - 'installation'
 
+- name: 'Remove database files'
+  file:
+    path: "{{ item }}"
+    state: 'absent'
+  loop:
+    - "{{ path_to_openldap_var_directory }}data.mdb"
+    - "{{ path_to_openldap_var_directory }}lock.mdb"
+  tags:
+    - 'installation'
