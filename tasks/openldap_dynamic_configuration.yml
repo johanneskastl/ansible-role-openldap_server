@@ -41,8 +41,6 @@
     owner: 'root'
     group: 'root'
     mode: '0600'
-  notify:
-    - 'Set olcRootPW via ldapmodify'
 
 - name: 'Check if olcRootPW is present'
   command:
@@ -52,5 +50,10 @@
   check_mode: 'false'
   changed_when: 'grep_for_olcRootPW.rc == 1 and grep_for_olcRootPW.stdout == ""'
   failed_when: 'grep_for_olcRootPW.rc != 0 and grep_for_olcRootPW.stdout != ""'
-  notify:
-    - 'Set olcRootPW via ldapmodify'
+
+- name: 'Set olcRootPW via ldapmodify'
+  command:
+    cmd: 'ldapmodify -Q -Y EXTERNAL -H ldapi:/// -f /root/OpenLDAP_configuration_via_ansible/rootDN_password_hash.ldif'
+  when: 'grep_for_olcRootPW.stdout == ""'
+  tags:
+    - 'configuration'
