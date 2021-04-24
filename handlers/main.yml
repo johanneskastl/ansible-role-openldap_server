@@ -56,7 +56,7 @@
     owner: "{{ openldap_user }}"
     group: "{{ openldap_group }}"
     mode: '0600'
-  when: 'ansible_os_family == "Debian"'
+  when: 'ansible_os_family == "RedHat" or ansible_os_family == "Debian"'
   tags:
     - 'installation'
 
