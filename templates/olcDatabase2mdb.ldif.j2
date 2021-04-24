@@ -5,6 +5,7 @@ olcDatabase: {2}mdb
 olcDbDirectory: /var/lib/ldap
 olcSuffix: {{ default_base_dn }}
 olcRootDN: cn={{ default_root_dn }},{{ default_base_dn }}
+olcRootPW:: {{ password_hash_base64_rootdn }}
 olcDbIndex: objectClass eq,pres
 olcDbIndex: ou,cn,mail,surname,givenname eq,pres,sub
 structuralObjectClass: olcMdbConfig
