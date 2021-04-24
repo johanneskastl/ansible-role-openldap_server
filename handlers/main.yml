@@ -24,7 +24,7 @@
 
 - name: 'Remove file olcDatabase={2}hdb.ldif'
   file:
-    path: '/etc/openldap/slapd.d/cn=config/olcDatabase={2}hdb.ldif'
+    path: "{{ path_to_openldap_etc_directory }}slapd.d/cn=config/olcDatabase={2}hdb.ldif"
     state: 'absent'
   when: 'ansible_os_family == "RedHat"'
   tags:
@@ -33,7 +33,7 @@
 - name: 'Create olcDatabase={2}mdb.ldif'
   template:
     src: 'olcDatabase2mdb.ldif.j2'
-    dest: '/etc/openldap/slapd.d/cn=config/olcDatabase={2}mdb.ldif'
+    dest: "{{ path_to_openldap_etc_directory }}slapd.d/cn=config/olcDatabase={2}mdb.ldif"
     owner: "{{ openldap_user }}"
     group: "{{ openldap_group }}"
     mode: '0600'
