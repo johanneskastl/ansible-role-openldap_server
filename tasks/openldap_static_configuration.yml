@@ -1,0 +1,5 @@
+---
+# openldap_server/tasks/openldap_static_configuration.yml
+
+- fail:
+    msg: Stop here
