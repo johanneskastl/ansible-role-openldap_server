@@ -10,6 +10,8 @@
     - 'Remove database files'
     - 'Remove file olcDatabase={2}hdb.ldif'
     - 'Remove file olcDatabase={1}mdb.ldif'
+    - 'Create cn=module{1}.ldif'
+    - 'Create olcDatabase={1}monitor.ldif'
     - 'Create olcDatabase={2}mdb.ldif'
     - 'Remove TLS settings from cn=config.ldif'
 
