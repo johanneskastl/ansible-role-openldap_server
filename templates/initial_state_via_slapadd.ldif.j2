@@ -1,10 +1,7 @@
 dn: {{ default_base_dn }}
-objectClass: top
+objectClass: domain
 objectClass: dcObject
-objectClass: organization
-o: {{ default_dns_domain }}
 dc: training
-structuralObjectClass: organization
 
 dn: cn={{ default_root_dn }},{{ default_base_dn }}
 objectClass: simpleSecurityObject
