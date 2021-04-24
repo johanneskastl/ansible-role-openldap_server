@@ -44,7 +44,7 @@
 - name: 'Remove TLS settings from cn=config.ldif'
   lineinfile:
     path: '/etc/openldap/slapd.d/cn=config.ldif'
-    regex: ^olcTLS
+    regex: ^olcTLS|CRC
     state: 'absent'
   when: 'ansible_os_family == "RedHat" and not use_tls | bool'
   tags:
