@@ -1,6 +1,20 @@
 ---
 # openldap_server/tasks/openldap_dynamic_configuration.yml
 
+- name: 'Create necessary schemas'
+  command:
+    cmd: "ldapadd -Q -Y EXTERNAL -H ldapi:/// -f {{ path_to_openldap_etc_directory }}schema/{{ item.source }}"
+    creates: "{{ path_to_openldap_etc_directory }}slapd.d/cn=config/cn=schema/{{ item.target }}"
+  loop:
+    - source: 'cosine.ldif'
+      target: 'cn={1}cosine.ldif'
+    - source: 'nis.ldif'
+      target: 'cn={2}nis.ldif'
+    - source: 'inetorgperson.ldif'
+      target: 'cn={3}inetorgperson.ldif'
+  tags:
+    - 'configuration'
+
 - name: 'Create directory /root/OpenLDAP_configuration_via_ansible/'
   file:
     path: '/root/OpenLDAP_configuration_via_ansible/'
