@@ -9,3 +9,6 @@ default_base_dn: 'dc=training,dc=b1-systems,dc=de'
 default_dns_domain: 'training.b1-systems.de'
 default_root_dn: 'b1admin'
 default_root_dn_description: 'B1 LDAP administrator'
+
+#
+slapd_loglevel: 256
