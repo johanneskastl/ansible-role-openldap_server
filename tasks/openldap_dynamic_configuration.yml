@@ -1,6 +1,10 @@
 ---
 # openldap_server/tasks/openldap_dynamic_configuration.yml
 
+#
+# Make sure all necessary schemas are imported/present
+#
+
 - name: 'Create necessary schemas'
   command:
     cmd: "ldapadd -Q -Y EXTERNAL -H ldapi:/// -f {{ path_to_openldap_etc_directory }}schema/{{ item.source }}"
@@ -14,6 +18,10 @@
       target: 'cn={3}inetorgperson.ldif'
   tags:
     - 'configuration'
+
+#
+# Set olcRootPW for olcDatabase={0}config,cn=config
+#
 
 - name: 'Create directory /root/OpenLDAP_configuration_via_ansible/'
   file:
