@@ -29,6 +29,16 @@
   tags:
     - 'configuration'
 
+- name: 'Enable the OpenLDAP service'
+  service:
+    name: "{{ openldap_server_service }}"
+    enabled: 'true'
+
+- name: 'Start the OpenLDAP service'
+  service:
+    name: "{{ openldap_server_service }}"
+    state: 'started'
+
 - name: 'Configure the OpenLDAP service using a dynamic configuration'
   include_tasks:
     file: openldap_dynamic_configuration.yml
@@ -43,13 +53,3 @@
   meta: flush_handlers
   tags:
     - 'installation'
-
-- name: 'Enable the OpenLDAP service'
-  service:
-    name: "{{ openldap_server_service }}"
-    enabled: 'true'
-
-- name: 'Start the OpenLDAP service'
-  service:
-    name: "{{ openldap_server_service }}"
-    state: 'started'
