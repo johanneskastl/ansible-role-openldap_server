@@ -38,6 +38,28 @@
   tags:
     - 'installation'
 
+- name: 'Create cn=module{1}.ldif'
+  template:
+    src: 'cn_module1.ldif'
+    dest: "{{ path_to_openldap_etc_directory }}slapd.d/cn=config/cn=module{1}.ldif"
+    owner: "{{ openldap_user }}"
+    group: "{{ openldap_group }}"
+    mode: '0600'
+  when: 'ansible_os_family == "Debian"'
+  tags:
+    - 'installation'
+
+- name: 'Create olcDatabase={1}monitor.ldif'
+  template:
+    src: 'olcDatabase1monitor.ldif'
+    dest: "{{ path_to_openldap_etc_directory }}slapd.d/cn=config/olcDatabase={1}monitor.ldif"
+    owner: "{{ openldap_user }}"
+    group: "{{ openldap_group }}"
+    mode: '0600'
+  when: 'ansible_os_family == "Debian"'
+  tags:
+    - 'installation'
+
 - name: 'Create olcDatabase={2}mdb.ldif'
   template:
     src: 'olcDatabase2mdb.ldif.j2'
