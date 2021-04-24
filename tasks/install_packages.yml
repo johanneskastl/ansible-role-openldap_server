@@ -9,6 +9,7 @@
     - 'Stop the OpenLDAP server service'
     - 'Remove database files'
     - 'Remove file olcDatabase={2}hdb.ldif'
+    - 'Remove file olcDatabase={1}mdb.ldif'
     - 'Create olcDatabase={2}mdb.ldif'
     - 'Remove TLS settings from cn=config.ldif'
 
