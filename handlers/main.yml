@@ -30,6 +30,14 @@
   tags:
     - 'installation'
 
+- name: 'Remove file olcDatabase={1}mdb.ldif'
+  file:
+    path: "{{ path_to_openldap_etc_directory }}slapd.d/cn=config/olcDatabase={1}mdb.ldif"
+    state: 'absent'
+  when: 'ansible_os_family == "Debian"'
+  tags:
+    - 'installation'
+
 - name: 'Create olcDatabase={2}mdb.ldif'
   template:
     src: 'olcDatabase2mdb.ldif.j2'
