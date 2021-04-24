@@ -54,6 +54,3 @@
   failed_when: 'grep_for_olcRootPW.rc != 0 and grep_for_olcRootPW.stdout != ""'
   notify:
     - 'Set olcRootPW via ldapmodify'
-
-- debug:
-    var: grep_for_olcRootPW
