@@ -57,3 +57,31 @@
   when: 'grep_for_olcRootPW.stdout == ""'
   tags:
     - 'configuration'
+
+#
+# Set the loglevel in olcDatabase={0}config,cn=config
+#
+
+- name: 'Create LDIF file to set olcLogLevel'
+  template:
+    src: 'loglevel.ldif.j2'
+    dest: '/root/OpenLDAP_configuration_via_ansible/loglevel.ldif'
+    owner: 'root'
+    group: 'root'
+    mode: '0600'
+
+- name: 'Check if olcLogLevel is present'
+  command:
+    cmd: "grep 'olcLogLevel: {{ slapd_loglevel }}' {{ path_to_openldap_etc_directory }}slapd.d/cn=config.ldif"
+  register: grep_for_olcLogLevel
+  check_mode: 'false'
+  changed_when: 'grep_for_olcLogLevel.rc == 1 and grep_for_olcLogLevel.stdout == ""'
+  failed_when: 'grep_for_olcLogLevel.rc != 0 and grep_for_olcLogLevel.stdout != ""'
+
+- name: 'Set olcLogLevel via ldapmodify'
+  command:
+    cmd: 'ldapmodify -Q -Y EXTERNAL -H ldapi:/// -f /root/OpenLDAP_configuration_via_ansible/loglevel.ldif'
+  when: 'grep_for_olcLogLevel.stdout == ""'
+  changed_when: 
+  tags:
+    - 'configuration'
