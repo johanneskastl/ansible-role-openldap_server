@@ -66,6 +66,7 @@
     - 'enable_TLS_cacertificate.ldif'
     - 'enable_TLS_certificate.ldif'
     - 'enable_TLS_key.ldif'
+    - 'enable_TLS.ldif'
 
 - name: 'Check if olcTLS is present in cn=config.ldif'
   command:
@@ -74,6 +75,14 @@
   check_mode: 'false'
   changed_when: 'false'
   failed_when: 'grep_for_olcTLS_in_config.rc != 0 and grep_for_olcTLS_in_config.stdout != ""'
+
+- name: 'Add all TLS setting in one go via ldapmodify'
+  command:
+    cmd: 'ldapmodify -Q -Y EXTERNAL -H ldapi:/// -f /root/OpenLDAP_configuration_via_ansible/enable_TLS.ldif'
+  when:
+    - 'grep_for_olcTLS_in_config.stdout == ""'
+  tags:
+    - 'configuration'
 
 - name: 'Set database ACLs via ldapmodify'
   command:
@@ -85,6 +94,8 @@
       file: 'enable_TLS_key.ldif'
     - name: "{{ ('olcTLSCACertificateFile: ' + path_to_TLS_ca_certificate) | truncate(75, True, '', 0) }}"
       file: 'enable_TLS_cacertificate.ldif'
-  when: 'item.name not in grep_for_olcTLS_in_config.stdout'
+  when:
+    - 'grep_for_olcTLS_in_config.stdout != ""'
+    - 'item.name not in grep_for_olcTLS_in_config.stdout'
   tags:
     - 'configuration'
