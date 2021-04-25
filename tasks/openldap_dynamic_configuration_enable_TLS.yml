@@ -32,14 +32,12 @@
   command:
     cmd: "ldapmodify -Q -Y EXTERNAL -H ldapi:/// -f /root/OpenLDAP_configuration_via_ansible/{{ item.file }}"
   loop:
-    - name: "olcTLSCertificateFile: {{ path_to_TLS_certificate }}"
+    - name: "{{ ('olcTLSCertificateFile: ' + path_to_TLS_certificate) | truncate(75, True, '', 0) }}"
       file: 'enable_TLS_certificate.ldif'
-    - name: "olcTLSCertificateKeyFile: {{ path_to_TLS_key }}"
+    - name: "{{ ('olcTLSCertificateKeyFile: ' + path_to_TLS_key) | truncate(75, True, '', 0) }}"
       file: 'enable_TLS_key.ldif'
-    - name: "olcTLSCACertificateFile: {{ path_to_TLS_ca_certificate }}"
+    - name: "{{ ('olcTLSCACertificateFile: ' + path_to_TLS_ca_certificate) | truncate(75, True, '', 0) }}"
       file: 'enable_TLS_cacertificate.ldif'
-  # FIXME: long lines are wrapped in LDIF files, so grep might not find the whole line
-  #        this will only reapply and show as changed, without actual changes (hopefully)
   when: 'item.name not in grep_for_olcTLS_in_config.stdout'
   tags:
     - 'configuration'
