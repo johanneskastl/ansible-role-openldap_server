@@ -49,6 +49,18 @@
   tags:
     - 'configuration'
 
+- name: 'Enable TLS when using a dynamic configuration'
+  include_tasks:
+    file: openldap_dynamic_configuration_enable_TLS.yml
+    apply:
+      tags:
+        - 'configuration'
+  when:
+    - 'not use_static_configuration | bool'
+    - 'use_tls | bool'
+  tags:
+    - 'configuration'
+
 - name: 'Force all notified handlers to run at this point, not waiting for normal sync points'
   meta: flush_handlers
   tags:
