@@ -84,7 +84,7 @@
   tags:
     - 'configuration'
 
-- name: 'Set database ACLs via ldapmodify'
+- name: 'Replace single TLS via ldapmodify'
   command:
     cmd: "ldapmodify -Q -Y EXTERNAL -H ldapi:/// -f /root/OpenLDAP_configuration_via_ansible/{{ item.file }}"
   loop:
