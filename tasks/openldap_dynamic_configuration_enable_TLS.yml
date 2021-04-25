@@ -9,7 +9,7 @@
 #
 
 #
-# Create the directory in case it is missing
+# Create the directory for the LDIF files in case it is missing
 #
 - name: 'Create directory /root/OpenLDAP_configuration_via_ansible/'
   file:
