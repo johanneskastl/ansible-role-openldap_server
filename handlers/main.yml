@@ -40,7 +40,7 @@
 
 - name: 'Create cn=module{1}.ldif'
   template:
-    src: 'cn_module1.ldif'
+    src: 'cn_module1.ldif.j2'
     dest: "{{ path_to_openldap_etc_directory }}slapd.d/cn=config/cn=module{1}.ldif"
     owner: "{{ openldap_user }}"
     group: "{{ openldap_group }}"
