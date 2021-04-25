@@ -9,6 +9,17 @@
 #
 
 #
+# Create the directory in case it is missing
+#
+- name: 'Create directory /root/OpenLDAP_configuration_via_ansible/'
+  file:
+    path: '/root/OpenLDAP_configuration_via_ansible/'
+    state: 'directory'
+    owner: 'root'
+    group: 'root'
+    mode: '0700'
+
+#
 # create LDIF files and apply them, if needed
 #
 - name: 'Create LDIF file to enable TLS'
