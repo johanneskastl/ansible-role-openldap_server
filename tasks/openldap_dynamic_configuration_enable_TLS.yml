@@ -8,6 +8,9 @@
 # - olcTLSCaCertificateFile
 #
 
+#
+# create LDIF files and apply them, if needed
+#
 - name: 'Create LDIF file to enable TLS'
   template:
     src: "{{ item }}.j2"
