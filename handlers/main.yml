@@ -49,6 +49,17 @@
   tags:
     - 'installation'
 
+- name: 'Create olcDatabase={-1}frontend.ldif'
+  template:
+    src: 'olcDatabase-1frontend.ldif.j2'
+    dest: "{{ path_to_openldap_etc_directory }}slapd.d/cn=config/olcDatabase={-1}frontend.ldif"
+    owner: "{{ openldap_user }}"
+    group: "{{ openldap_group }}"
+    mode: '0600'
+  when: 'ansible_os_family == "RedHat" or ansible_os_family == "Debian"'
+  tags:
+    - 'installation'
+
 - name: 'Create olcDatabase={1}monitor.ldif'
   template:
     src: 'olcDatabase1monitor.ldif.j2'
