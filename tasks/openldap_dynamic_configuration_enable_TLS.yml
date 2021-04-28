@@ -9,6 +9,17 @@
 #
 
 #
+# Create the certificates directory
+#
+- name: "Create directory {{ path_to_openldap_etc_directory }}certs/"
+  file:
+    path: "{{ path_to_openldap_etc_directory }}certs/"
+    state: 'directory'
+    owner: "{{ openldap_user }}"
+    group: "{{ openldap_group }}"
+    mode: '0700'
+
+#
 # Create the directory for the LDIF files in case it is missing
 #
 - name: 'Create directory /root/OpenLDAP_configuration_via_ansible/'

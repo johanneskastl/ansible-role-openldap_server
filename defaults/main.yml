@@ -5,6 +5,9 @@ use_static_configuration: 'false'
 use_tls: 'false'
 
 #
+default_add_frontend_acls: 'true'
+default_add_frontend_acls_protect_attrs: 'true'
+default_add_frontend_acls_allow_read: 'true'
 default_base_dn: 'dc=training,dc=b1-systems,dc=de'
 default_dns_domain: 'training.b1-systems.de'
 default_root_dn: 'b1admin'

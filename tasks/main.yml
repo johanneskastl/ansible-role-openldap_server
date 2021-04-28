@@ -10,6 +10,17 @@
     - 'installation'
     - 'configuration'
 
+- name: 'Parse variables'
+  include_tasks:
+    file: parse_variables.yml
+    apply:
+      tags:
+        - 'installation'
+        - 'configuration'
+  tags:
+    - 'installation'
+    - 'configuration'
+
 - name: 'Install packages'
   include_tasks:
     file: install_packages.yml
