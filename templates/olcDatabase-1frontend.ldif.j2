@@ -10,7 +10,9 @@ olcAccess: {2}to dn.base="cn=Subschema" by * read
 {% if default_add_frontend_acls_protect_attrs | bool %}
 olcAccess: {3}to attrs=userPassword by self write by anonymous auth by * none
 olcAccess: {4}to attrs=shadowLastChange by self write by * read
+{% if default_add_frontend_acls_allow_read| bool %}
 olcAccess: {5}to * by * read
+{% endif %}
 {% endif %}
 {% endif %}
 olcSizeLimit: 500
