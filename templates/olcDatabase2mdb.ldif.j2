@@ -3,8 +3,8 @@ objectClass: olcDatabaseConfig
 objectClass: olcMdbConfig
 olcDatabase: {2}mdb
 olcDbDirectory: /var/lib/ldap
-olcSuffix: {{ default_base_dn }}
-olcRootDN: cn={{ default_root_dn }},{{ default_base_dn }}
+olcSuffix: {{ base_dn }}
+olcRootDN: cn={{ root_dn }},{{ base_dn }}
 olcRootPW:: {{ password_hash_base64_rootdn }}
 olcDbIndex: objectClass eq,pres
 olcDbIndex: ou,cn,mail,surname,givenname,uid eq,pres,sub
