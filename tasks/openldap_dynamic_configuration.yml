@@ -112,7 +112,7 @@
   changed_when: 'false'
   failed_when: 'grep_for_olcAccess.rc != 0 and grep_for_olcAccess.stdout != ""'
 
-- name: 'Set frontend ACLs via ldapmodify'
+- name: 'Set basic frontend ACLs via ldapmodify'
   command:
     cmd: "ldapmodify -Q -Y EXTERNAL -H ldapi:/// -f /root/OpenLDAP_configuration_via_ansible/{{ item.file }}"
   loop:
@@ -122,10 +122,23 @@
       file: 'frontend_acl_1.ldif'
     - name: 'olcAccess: {2}to'
       file: 'frontend_acl_2.ldif'
+  when:
+    - 'item.name not in grep_for_olcAccess.stdout'
+    - 'add_frontend_acls | bool'
+  tags:
+    - 'configuration'
+
+- name: 'Set additional frontend ACLs via ldapmodify'
+  command:
+    cmd: "ldapmodify -Q -Y EXTERNAL -H ldapi:/// -f /root/OpenLDAP_configuration_via_ansible/{{ item.file }}"
+  loop:
     - name: 'olcAccess: {3}to'
       file: 'frontend_acl_3.ldif'
     - name: 'olcAccess: {4}to'
       file: 'frontend_acl_4.ldif'
-  when: 'item.name not in grep_for_olcAccess.stdout'
+  when:
+    - 'item.name not in grep_for_olcAccess.stdout'
+    - 'add_frontend_acls | bool'
+    - 'add_frontend_acls_protect_attrs | bool'
   tags:
     - 'configuration'
