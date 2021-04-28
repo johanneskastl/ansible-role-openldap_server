@@ -101,6 +101,7 @@
     - 'frontend_acl_0.ldif'
     - 'frontend_acl_1.ldif'
     - 'frontend_acl_2.ldif'
+    - 'frontend_acl_3.ldif'
 
 - name: 'Check if olcAccess is present in olcDatabase={-1}frontend.ldif'
   command:
@@ -120,6 +121,8 @@
       file: 'frontend_acl_1.ldif'
     - name: 'olcAccess: {2}to'
       file: 'frontend_acl_2.ldif'
+    - name: 'olcAccess: {3}to'
+      file: 'frontend_acl_3.ldif'
   when: 'item.name not in grep_for_olcAccess.stdout'
   tags:
     - 'configuration'
@@ -136,7 +139,6 @@
     group: 'root'
     mode: '0600'
   loop:
-    - 'acl_0.ldif'
     - 'acl_1.ldif'
 
 - name: 'Check if olcAccess is present in olcDatabase={2}mdb.ldif'
@@ -151,8 +153,6 @@
   command:
     cmd: "ldapmodify -Q -Y EXTERNAL -H ldapi:/// -f /root/OpenLDAP_configuration_via_ansible/{{ item.file }}"
   loop:
-    - name: 'olcAccess: {0}to'
-      file: 'acl_0.ldif'
     - name: 'olcAccess: {1}to'
       file: 'acl_1.ldif'
   when: 'item.name not in grep_for_olcAccess_in_mdb.stdout'
