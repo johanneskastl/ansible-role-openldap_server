@@ -37,6 +37,18 @@
     - 'Restart the OpenLDAP server service'
 
 #
+# Set olcRootDN for olcDatabase={0}config,cn=config
+#
+
+- name: 'Set olcRootDN'
+  ldap_attr:
+    dn: 'olcDatabase={0}config,cn=config'
+    name: 'olcRootDN'
+    values: 'cn=admin,cn=config'
+  tags:
+    - 'configuration'
+
+#
 # Set olcRootPW for olcDatabase={0}config,cn=config
 #
 
