@@ -52,6 +52,8 @@
   check_mode: 'false'
   changed_when: 'grep_for_olcRootPW.rc == 1 and grep_for_olcRootPW.stdout == ""'
   failed_when: 'grep_for_olcRootPW.rc != 0 and grep_for_olcRootPW.stdout != ""'
+  # do not show the output when using ansible-playbook --diff
+  no_log: 'true'
 
 - name: 'Set olcRootPW via ldapmodify'
   command:
