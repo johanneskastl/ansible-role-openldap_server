@@ -53,6 +53,24 @@
   when: 'path_to_TLS_ca_certificate is undefined'
 
 #
+# Fail if certificate files are missing
+#
+
+- name: 'Check for the certificate files'
+  stat:
+    path: 'item'
+  register: check_for_certificate_files
+  loop:
+    - "{{ path_to_TLS_certificate }}"
+    - "{{ path_to_TLS_key }}"
+    - "{{ path_to_TLS_ca_certificate }}"
+
+- fail:
+    msg: "{{ item }} is missing..."
+  loop: "{{ check_for_certificate_files.results }}"
+  when: 'item.stat.exists | bool'
+
+#
 # create LDIF files and apply them, if needed
 #
 - name: 'Create LDIF file to enable TLS'
