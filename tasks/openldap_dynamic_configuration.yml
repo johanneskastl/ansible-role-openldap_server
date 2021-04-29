@@ -40,29 +40,14 @@
 # Set olcRootPW for olcDatabase={0}config,cn=config
 #
 
-- name: 'Create LDIF file to set olcRootPW'
-  template:
-    src: 'rootDN_password_hash.ldif.j2'
-    dest: '/root/OpenLDAP_configuration_via_ansible/rootDN_password_hash.ldif'
-    owner: 'root'
-    group: 'root'
-    mode: '0600'
-
-- name: 'Check if olcRootPW is present'
-  command:
-    # we really grep for the base64-encoded hash
-    cmd: "grep 'olcRootPW:: {{ password_hash_base64_rootdn }}' {{ path_to_openldap_etc_directory }}slapd.d/cn=config/olcDatabase={0}config.ldif"
-  register: grep_for_olcRootPW
-  check_mode: 'false'
-  changed_when: 'grep_for_olcRootPW.rc == 1 and grep_for_olcRootPW.stdout == ""'
-  failed_when: 'grep_for_olcRootPW.rc != 0 and grep_for_olcRootPW.stdout != ""'
-  # do not show the output when using ansible-playbook --diff
+- name: 'Set olcRootPW'
+  ldap_attr:
+    dn: 'olcDatabase={0}config,cn=config'
+    name: 'olcRootPW'
+    values: "{{ password_hash_rootdn }}"
+    state: 'exact'
+  # do not show output when using ansible-playbook --diff
   no_log: 'true'
-
-- name: 'Set olcRootPW via ldapmodify'
-  command:
-    cmd: 'ldapmodify -Q -Y EXTERNAL -H ldapi:/// -f /root/OpenLDAP_configuration_via_ansible/rootDN_password_hash.ldif'
-  when: 'grep_for_olcRootPW.stdout == ""'
   tags:
     - 'configuration'
 
