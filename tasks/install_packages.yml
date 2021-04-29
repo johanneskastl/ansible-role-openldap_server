@@ -16,5 +16,10 @@
     - 'Create olcDatabase={2}mdb.ldif'
     - 'Remove TLS settings from cn=config.ldif'
 
+- name: 'Install additional packages'
+  package:
+    name: "{{ additional_packages }}"
+    state: 'present'
+
 - name: 'Force all notified handlers to run at this point, not waiting for normal sync points'
   meta: flush_handlers
