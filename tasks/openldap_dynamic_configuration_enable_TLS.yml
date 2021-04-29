@@ -71,49 +71,20 @@
   when: 'item.stat.exists | bool'
 
 #
-# create LDIF files and apply them, if needed
+# apply the TLS settings
 #
-- name: 'Create LDIF file to enable TLS'
-  template:
-    src: "{{ item }}.j2"
-    dest: "/root/OpenLDAP_configuration_via_ansible/{{ item }}"
-    owner: 'root'
-    group: 'root'
-    mode: '0600'
+- name: 'Add TLS setting'
+  ldap_attr:
+    dn: 'cn=config'
+    name: "{{ item.name }}"
+    values: "{{ item.value }}"
+    state: 'exact'
   loop:
-    - 'enable_TLS_cacertificate.ldif'
-    - 'enable_TLS_certificate.ldif'
-    - 'enable_TLS_key.ldif'
-    - 'enable_TLS.ldif'
-
-- name: 'Check if olcTLS is present in cn=config.ldif'
-  command:
-    cmd: "grep '^olcTLS' {{ path_to_openldap_etc_directory }}slapd.d/cn=config.ldif"
-  register: grep_for_olcTLS_in_config
-  check_mode: 'false'
-  changed_when: 'false'
-  failed_when: 'grep_for_olcTLS_in_config.rc != 0 and grep_for_olcTLS_in_config.stdout != ""'
-
-- name: 'Add all TLS setting in one go via ldapmodify'
-  command:
-    cmd: 'ldapmodify -Q -Y EXTERNAL -H ldapi:/// -f /root/OpenLDAP_configuration_via_ansible/enable_TLS.ldif'
-  when:
-    - 'grep_for_olcTLS_in_config.stdout == ""'
-  tags:
-    - 'configuration'
-
-- name: 'Replace single TLS via ldapmodify'
-  command:
-    cmd: "ldapmodify -Q -Y EXTERNAL -H ldapi:/// -f /root/OpenLDAP_configuration_via_ansible/{{ item.file }}"
-  loop:
-    - name: "{{ ('olcTLSCertificateFile: ' + path_to_TLS_certificate) | truncate(75, True, '', 0) }}"
-      file: 'enable_TLS_certificate.ldif'
-    - name: "{{ ('olcTLSCertificateKeyFile: ' + path_to_TLS_key) | truncate(75, True, '', 0) }}"
-      file: 'enable_TLS_key.ldif'
-    - name: "{{ ('olcTLSCACertificateFile: ' + path_to_TLS_ca_certificate) | truncate(75, True, '', 0) }}"
-      file: 'enable_TLS_cacertificate.ldif'
-  when:
-    - 'grep_for_olcTLS_in_config.stdout != ""'
-    - 'item.name not in grep_for_olcTLS_in_config.stdout'
+    - name: 'olcTLSCACertificateFile'
+      value: "{{ path_to_TLS_ca_certificate }}"
+    - name: 'olcTLSCertificateKeyFile'
+      value: "{{ path_to_TLS_key }}"
+    - name: 'olcTLSCertificateFile'
+      value: "{{ path_to_TLS_certificate }}"
   tags:
     - 'configuration'
