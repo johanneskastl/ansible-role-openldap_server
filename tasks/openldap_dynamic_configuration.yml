@@ -22,7 +22,7 @@
     - 'configuration'
 
 #
-# Set olcRootPW for olcDatabase={0}config,cn=config
+# Create directory /root/OpenLDAP_configuration_via_ansible/
 #
 
 - name: 'Create directory /root/OpenLDAP_configuration_via_ansible/'
@@ -35,6 +35,10 @@
   notify:
     - 'Fix permissions on database files'
     - 'Restart the OpenLDAP server service'
+
+#
+# Set olcRootPW for olcDatabase={0}config,cn=config
+#
 
 - name: 'Create LDIF file to set olcRootPW'
   template:
