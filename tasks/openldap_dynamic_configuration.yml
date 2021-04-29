@@ -10,6 +10,8 @@
     cmd: "ldapadd -Q -Y EXTERNAL -H ldapi:/// -f {{ path_to_openldap_etc_directory }}schema/{{ item.source }}"
     creates: "{{ path_to_openldap_etc_directory }}slapd.d/cn=config/cn=schema/{{ item.target }}"
   loop:
+    - source: 'core.ldif'
+      target: 'cn={0}core.ldif'
     - source: 'cosine.ldif'
       target: 'cn={1}cosine.ldif'
     - source: 'nis.ldif'
