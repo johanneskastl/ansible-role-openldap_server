@@ -78,68 +78,40 @@
 # Set frontend ACLs
 #
 
-- name: 'Create LDIF file to set the frontend ACLs'
-  template:
-    src: "{{ item }}.j2"
-    dest: "/root/OpenLDAP_configuration_via_ansible/{{ item }}"
-    owner: 'root'
-    group: 'root'
-    mode: '0600'
+- name: 'Set basic frontend ACLs'
+  ldap_attr:
+    dn: 'olcDatabase={-1}frontend,cn=config'
+    name: 'olcAccess'
+    values: "{{ item }}"
   loop:
-    - 'frontend_acl_0.ldif'
-    - 'frontend_acl_1.ldif'
-    - 'frontend_acl_2.ldif'
-    - 'frontend_acl_3.ldif'
-    - 'frontend_acl_4.ldif'
-    - 'frontend_acl_5.ldif'
-
-- name: 'Check if olcAccess is present in olcDatabase={-1}frontend.ldif'
-  command:
-    cmd: "grep '^olcAccess:' {{ path_to_openldap_etc_directory }}slapd.d/cn=config/olcDatabase={-1}frontend.ldif"
-  register: grep_for_olcAccess
-  check_mode: 'false'
-  changed_when: 'false'
-  failed_when: 'grep_for_olcAccess.rc != 0 and grep_for_olcAccess.stdout != ""'
-
-- name: 'Set basic frontend ACLs via ldapmodify'
-  command:
-    cmd: "ldapmodify -Q -Y EXTERNAL -H ldapi:/// -f /root/OpenLDAP_configuration_via_ansible/{{ item.file }}"
-  loop:
-    - name: 'olcAccess: {0}to'
-      file: 'frontend_acl_0.ldif'
-    - name: 'olcAccess: {1}to'
-      file: 'frontend_acl_1.ldif'
-    - name: 'olcAccess: {2}to'
-      file: 'frontend_acl_2.ldif'
+    - '{0}to * by dn.exact=gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth manage by * break'
+    - '{1}to dn.exact="" by * read'
+    - '{2}to dn.base="cn=Subschema" by * read'
   when:
-    - 'item.name not in grep_for_olcAccess.stdout'
     - 'add_frontend_acls | bool'
   tags:
     - 'configuration'
 
-- name: 'Set additional frontend ACLs via ldapmodify'
-  command:
-    cmd: "ldapmodify -Q -Y EXTERNAL -H ldapi:/// -f /root/OpenLDAP_configuration_via_ansible/{{ item.file }}"
+- name: 'Set additional frontend ACLs'
+  ldap_attr:
+    dn: 'olcDatabase={-1}frontend,cn=config'
+    name: 'olcAccess'
+    values: "{{ item }}"
   loop:
-    - name: 'olcAccess: {3}to'
-      file: 'frontend_acl_3.ldif'
-    - name: 'olcAccess: {4}to'
-      file: 'frontend_acl_4.ldif'
+    - '{3}to attrs=userPassword by self write by anonymous auth by users none'
+    - '{4}to attrs=shadowLastChange by self write by * read'
   when:
-    - 'item.name not in grep_for_olcAccess.stdout'
     - 'add_frontend_acls | bool'
     - 'add_frontend_acls_protect_attrs | bool'
   tags:
     - 'configuration'
 
-- name: 'Set frontend ACL to allow UNLIMITED READ ACCESS via ldapmodify'
-  command:
-    cmd: "ldapmodify -Q -Y EXTERNAL -H ldapi:/// -f /root/OpenLDAP_configuration_via_ansible/{{ item.file }}"
-  loop:
-    - name: 'olcAccess: {5}to'
-      file: 'frontend_acl_5.ldif'
+- name: 'Set frontend ACL to allow UNLIMITED READ ACCESS'
+  ldap_attr:
+    dn: 'olcDatabase={-1}frontend,cn=config'
+    name: 'olcAccess'
+    values: '{5}to * by * read'
   when:
-    - 'item.name not in grep_for_olcAccess.stdout'
     - 'add_frontend_acls | bool'
     - 'add_frontend_acls_protect_attrs | bool'
     - 'add_frontend_acls_allow_read | bool'
