@@ -22,21 +22,6 @@
     - 'configuration'
 
 #
-# Create directory /root/OpenLDAP_configuration_via_ansible/
-#
-
-- name: 'Create directory /root/OpenLDAP_configuration_via_ansible/'
-  file:
-    path: '/root/OpenLDAP_configuration_via_ansible/'
-    state: 'directory'
-    owner: 'root'
-    group: 'root'
-    mode: '0700'
-  notify:
-    - 'Fix permissions on database files'
-    - 'Restart the OpenLDAP server service'
-
-#
 # Set olcRootDN for olcDatabase={0}config,cn=config
 #
 
