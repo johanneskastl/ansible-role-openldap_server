@@ -60,6 +60,7 @@
     state: 'exact'
   # do not show output when using ansible-playbook --diff
   no_log: 'true'
+  when: 'password_hash_rootdn is defined'
   tags:
     - 'configuration'
 
