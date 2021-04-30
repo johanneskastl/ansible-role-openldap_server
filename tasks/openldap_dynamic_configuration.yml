@@ -22,43 +22,30 @@
     - 'configuration'
 
 #
+# Set olcRootDN for olcDatabase={0}config,cn=config
+#
+
+- name: 'Set olcRootDN for olcDatabase={0}config,cn=config'
+  ldap_attr:
+    dn: 'olcDatabase={0}config,cn=config'
+    name: 'olcRootDN'
+    values: 'cn=admin,cn=config'
+  tags:
+    - 'configuration'
+
+#
 # Set olcRootPW for olcDatabase={0}config,cn=config
 #
 
-- name: 'Create directory /root/OpenLDAP_configuration_via_ansible/'
-  file:
-    path: '/root/OpenLDAP_configuration_via_ansible/'
-    state: 'directory'
-    owner: 'root'
-    group: 'root'
-    mode: '0700'
-  notify:
-    - 'Fix permissions on database files'
-    - 'Restart the OpenLDAP server service'
-
-- name: 'Create LDIF file to set olcRootPW'
-  template:
-    src: 'rootDN_password_hash.ldif.j2'
-    dest: '/root/OpenLDAP_configuration_via_ansible/rootDN_password_hash.ldif'
-    owner: 'root'
-    group: 'root'
-    mode: '0600'
-
-- name: 'Check if olcRootPW is present'
-  command:
-    # we really grep for the base64-encoded hash
-    cmd: "grep 'olcRootPW:: {{ password_hash_base64_rootdn }}' {{ path_to_openldap_etc_directory }}slapd.d/cn=config/olcDatabase={0}config.ldif"
-  register: grep_for_olcRootPW
-  check_mode: 'false'
-  changed_when: 'grep_for_olcRootPW.rc == 1 and grep_for_olcRootPW.stdout == ""'
-  failed_when: 'grep_for_olcRootPW.rc != 0 and grep_for_olcRootPW.stdout != ""'
-  # do not show the output when using ansible-playbook --diff
+- name: 'Set olcRootPW for olcDatabase={0}config,cn=config'
+  ldap_attr:
+    dn: 'olcDatabase={0}config,cn=config'
+    name: 'olcRootPW'
+    values: "{{ password_hash_rootdn }}"
+    state: 'exact'
+  # do not show output when using ansible-playbook --diff
   no_log: 'true'
-
-- name: 'Set olcRootPW via ldapmodify'
-  command:
-    cmd: 'ldapmodify -Q -Y EXTERNAL -H ldapi:/// -f /root/OpenLDAP_configuration_via_ansible/rootDN_password_hash.ldif'
-  when: 'grep_for_olcRootPW.stdout == ""'
+  when: 'password_hash_rootdn is defined'
   tags:
     - 'configuration'
 
@@ -66,27 +53,40 @@
 # Set the loglevel in olcDatabase={0}config,cn=config
 #
 
-- name: 'Create LDIF file to set olcLogLevel'
-  template:
-    src: 'loglevel.ldif.j2'
-    dest: '/root/OpenLDAP_configuration_via_ansible/loglevel.ldif'
-    owner: 'root'
-    group: 'root'
-    mode: '0600'
+- name: 'Set olcLogLevel in olcDatabase={0}config,cn=config'
+  ldap_attr:
+    dn: 'cn=config'
+    name: 'olcLogLevel'
+    values: "{{ slapd_loglevel }}"
+  tags:
+    - 'configuration'
 
-- name: 'Check if olcLogLevel is present'
-  command:
-    cmd: "grep 'olcLogLevel: {{ slapd_loglevel }}' {{ path_to_openldap_etc_directory }}slapd.d/cn=config.ldif"
-  register: grep_for_olcLogLevel
-  check_mode: 'false'
-  changed_when: 'grep_for_olcLogLevel.rc == 1 and grep_for_olcLogLevel.stdout == ""'
-  failed_when: 'grep_for_olcLogLevel.rc != 0 and grep_for_olcLogLevel.stdout != ""'
+#
+# Set olcRootDN for olcDatabase={2}mdb,cn=config
+#
 
-- name: 'Set olcLogLevel via ldapmodify'
-  command:
-    cmd: 'ldapmodify -Q -Y EXTERNAL -H ldapi:/// -f /root/OpenLDAP_configuration_via_ansible/loglevel.ldif'
-  when: 'grep_for_olcLogLevel.stdout == ""'
-  changed_when: 
+- name: 'Set olcRootDN for olcDatabase={2}mdb,cn=config'
+  ldap_attr:
+    dn: 'olcDatabase={2}mdb,cn=config'
+    name: 'olcRootDN'
+    values: "{{ root_dn }},{{ base_dn }}"
+  when: 'password_hash_database_rootdn is defined or password_hash_rootdn is defined'
+  tags:
+    - 'configuration'
+
+#
+# Set olcRootPW for olcDatabase={2}mdb,cn=config
+#
+
+- name: 'Set olcRootPW for olcDatabase={2}mdb,cn=config'
+  ldap_attr:
+    dn: 'olcDatabase={2}mdb,cn=config'
+    name: 'olcRootPW'
+    values: "{{ password_hash_database_rootdn | default(password_hash_rootdn) }}"
+    state: 'exact'
+  # do not show output when using ansible-playbook --diff
+  no_log: 'true'
+  when: 'password_hash_database_rootdn is defined or password_hash_rootdn is defined'
   tags:
     - 'configuration'
 
@@ -94,70 +94,90 @@
 # Set frontend ACLs
 #
 
-- name: 'Create LDIF file to set the frontend ACLs'
-  template:
-    src: "{{ item }}.j2"
-    dest: "/root/OpenLDAP_configuration_via_ansible/{{ item }}"
-    owner: 'root'
-    group: 'root'
-    mode: '0600'
+- name: 'Set basic frontend ACLs'
+  ldap_attr:
+    dn: 'olcDatabase={-1}frontend,cn=config'
+    name: 'olcAccess'
+    values: "{{ item }}"
   loop:
-    - 'frontend_acl_0.ldif'
-    - 'frontend_acl_1.ldif'
-    - 'frontend_acl_2.ldif'
-    - 'frontend_acl_3.ldif'
-    - 'frontend_acl_4.ldif'
-    - 'frontend_acl_5.ldif'
-
-- name: 'Check if olcAccess is present in olcDatabase={-1}frontend.ldif'
-  command:
-    cmd: "grep '^olcAccess:' {{ path_to_openldap_etc_directory }}slapd.d/cn=config/olcDatabase={-1}frontend.ldif"
-  register: grep_for_olcAccess
-  check_mode: 'false'
-  changed_when: 'false'
-  failed_when: 'grep_for_olcAccess.rc != 0 and grep_for_olcAccess.stdout != ""'
-
-- name: 'Set basic frontend ACLs via ldapmodify'
-  command:
-    cmd: "ldapmodify -Q -Y EXTERNAL -H ldapi:/// -f /root/OpenLDAP_configuration_via_ansible/{{ item.file }}"
-  loop:
-    - name: 'olcAccess: {0}to'
-      file: 'frontend_acl_0.ldif'
-    - name: 'olcAccess: {1}to'
-      file: 'frontend_acl_1.ldif'
-    - name: 'olcAccess: {2}to'
-      file: 'frontend_acl_2.ldif'
+    - '{0}to * by dn.exact=gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth manage by * break'
+    - '{1}to dn.exact="" by * read'
+    - '{2}to dn.base="cn=Subschema" by * read'
   when:
-    - 'item.name not in grep_for_olcAccess.stdout'
     - 'add_frontend_acls | bool'
   tags:
     - 'configuration'
 
-- name: 'Set additional frontend ACLs via ldapmodify'
-  command:
-    cmd: "ldapmodify -Q -Y EXTERNAL -H ldapi:/// -f /root/OpenLDAP_configuration_via_ansible/{{ item.file }}"
+- name: 'Set additional frontend ACLs'
+  ldap_attr:
+    dn: 'olcDatabase={-1}frontend,cn=config'
+    name: 'olcAccess'
+    values: "{{ item }}"
   loop:
-    - name: 'olcAccess: {3}to'
-      file: 'frontend_acl_3.ldif'
-    - name: 'olcAccess: {4}to'
-      file: 'frontend_acl_4.ldif'
+    - '{3}to attrs=userPassword by self write by anonymous auth by users none'
+    - '{4}to attrs=shadowLastChange by self write by * read'
   when:
-    - 'item.name not in grep_for_olcAccess.stdout'
     - 'add_frontend_acls | bool'
     - 'add_frontend_acls_protect_attrs | bool'
   tags:
     - 'configuration'
 
-- name: 'Set frontend ACL to allow UNLIMITED READ ACCESS via ldapmodify'
-  command:
-    cmd: "ldapmodify -Q -Y EXTERNAL -H ldapi:/// -f /root/OpenLDAP_configuration_via_ansible/{{ item.file }}"
-  loop:
-    - name: 'olcAccess: {5}to'
-      file: 'frontend_acl_5.ldif'
+- name: 'Set frontend ACL to allow UNLIMITED READ ACCESS'
+  ldap_attr:
+    dn: 'olcDatabase={-1}frontend,cn=config'
+    name: 'olcAccess'
+    values: '{5}to * by * read'
   when:
-    - 'item.name not in grep_for_olcAccess.stdout'
     - 'add_frontend_acls | bool'
     - 'add_frontend_acls_protect_attrs | bool'
     - 'add_frontend_acls_allow_read | bool'
+  tags:
+    - 'configuration'
+
+#
+# Set frontend ACLs
+#
+- name: 'Set frontend ACL to allow UNLIMITED READ ACCESS'
+  ldap_attr:
+    dn: 'olcDatabase={-1}frontend,cn=config'
+    name: 'olcAccess'
+    values: '{5}to * by * read'
+    state: 'absent'
+  when: '
+    not add_frontend_acls | bool
+    or not add_frontend_acls_protect_attrs | bool
+    or not add_frontend_acls_allow_read | bool
+    '
+  tags:
+    - 'configuration'
+
+- name: 'Set additional frontend ACLs'
+  ldap_attr:
+    dn: 'olcDatabase={-1}frontend,cn=config'
+    name: 'olcAccess'
+    values: "{{ item }}"
+    state: 'absent'
+  loop:
+    - '{4}to attrs=shadowLastChange by self write by * read'
+    - '{3}to attrs=userPassword by self write by anonymous auth by users none'
+  when: '
+    not add_frontend_acls | bool
+    or not add_frontend_acls_protect_attrs | bool
+    '
+  tags:
+    - 'configuration'
+
+- name: 'Remove the basic frontend ACLs'
+  ldap_attr:
+    dn: 'olcDatabase={-1}frontend,cn=config'
+    name: 'olcAccess'
+    values: "{{ item }}"
+    state: 'absent'
+  loop:
+    - '{2}to dn.base="cn=Subschema" by * read'
+    - '{1}to dn.exact="" by * read'
+    - '{0}to * by dn.exact=gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth manage by * break'
+  when:
+    - 'not add_frontend_acls | bool'
   tags:
     - 'configuration'

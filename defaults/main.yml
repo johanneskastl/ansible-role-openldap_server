@@ -10,7 +10,7 @@ default_add_frontend_acls_protect_attrs: 'true'
 default_add_frontend_acls_allow_read: 'true'
 default_base_dn: 'dc=training,dc=b1-systems,dc=de'
 default_dns_domain: 'training.b1-systems.de'
-default_root_dn: 'b1admin'
+default_root_dn: 'cn=b1admin'
 default_root_dn_description: 'B1 LDAP administrator'
 
 #
