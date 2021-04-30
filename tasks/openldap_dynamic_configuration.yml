@@ -62,6 +62,35 @@
     - 'configuration'
 
 #
+# Set olcRootDN for olcDatabase={2}mdb,cn=config
+#
+
+- name: 'Set olcRootDN'
+  ldap_attr:
+    dn: 'olcDatabase={2}mdb,cn=config'
+    name: 'olcRootDN'
+    values: "{{ root_dn }},{{ base_dn }}"
+  when: 'password_hash_database_rootdn is defined or password_hash_rootdn is defined'
+  tags:
+    - 'configuration'
+
+#
+# Set olcRootPW for olcDatabase={2}mdb,cn=config
+#
+
+- name: 'Set olcRootPW'
+  ldap_attr:
+    dn: 'olcDatabase={2}mdb,cn=config'
+    name: 'olcRootPW'
+    values: "{{ password_hash_database_rootdn | default(password_hash_rootdn) }}"
+    state: 'exact'
+  # do not show output when using ansible-playbook --diff
+  no_log: 'true'
+  when: 'password_hash_database_rootdn is defined or password_hash_rootdn is defined'
+  tags:
+    - 'configuration'
+
+#
 # Set frontend ACLs
 #
 
