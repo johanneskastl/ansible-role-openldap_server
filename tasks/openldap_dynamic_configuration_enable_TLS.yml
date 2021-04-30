@@ -62,7 +62,26 @@
 #
 # apply the TLS settings
 #
-- name: 'Add TLS setting'
+- name: 'Add TLS setting (first try)'
+  ldap_attr:
+    dn: 'cn=config'
+    name: "{{ item.name }}"
+    values: "{{ item.value }}"
+    state: 'exact'
+  loop:
+    - name: 'olcTLSCACertificateFile'
+      value: "{{ path_to_TLS_ca_certificate }}"
+    - name: 'olcTLSCertificateKeyFile'
+      value: "{{ path_to_TLS_key }}"
+    - name: 'olcTLSCertificateFile'
+      value: "{{ path_to_TLS_certificate }}"
+  # ignore errors during the first run
+  # https://github.com/ansible/ansible/issues/25665
+  ignore_errors: 'true'
+  tags:
+    - 'configuration'
+
+- name: 'Add TLS setting (second try)'
   ldap_attr:
     dn: 'cn=config'
     name: "{{ item.name }}"
