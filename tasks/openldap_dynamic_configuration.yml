@@ -25,7 +25,7 @@
 # Set olcRootDN for olcDatabase={0}config,cn=config
 #
 
-- name: 'Set olcRootDN'
+- name: 'Set olcRootDN for olcDatabase={0}config,cn=config'
   ldap_attr:
     dn: 'olcDatabase={0}config,cn=config'
     name: 'olcRootDN'
@@ -37,7 +37,7 @@
 # Set olcRootPW for olcDatabase={0}config,cn=config
 #
 
-- name: 'Set olcRootPW'
+- name: 'Set olcRootPW for olcDatabase={0}config,cn=config'
   ldap_attr:
     dn: 'olcDatabase={0}config,cn=config'
     name: 'olcRootPW'
@@ -53,7 +53,7 @@
 # Set the loglevel in olcDatabase={0}config,cn=config
 #
 
-- name: 'Set olcLogLevel'
+- name: 'Set olcLogLevel in olcDatabase={0}config,cn=config'
   ldap_attr:
     dn: 'cn=config'
     name: 'olcLogLevel'
@@ -65,7 +65,7 @@
 # Set olcRootDN for olcDatabase={2}mdb,cn=config
 #
 
-- name: 'Set olcRootDN'
+- name: 'Set olcRootDN for olcDatabase={2}mdb,cn=config'
   ldap_attr:
     dn: 'olcDatabase={2}mdb,cn=config'
     name: 'olcRootDN'
@@ -78,7 +78,7 @@
 # Set olcRootPW for olcDatabase={2}mdb,cn=config
 #
 
-- name: 'Set olcRootPW'
+- name: 'Set olcRootPW for olcDatabase={2}mdb,cn=config'
   ldap_attr:
     dn: 'olcDatabase={2}mdb,cn=config'
     name: 'olcRootPW'
