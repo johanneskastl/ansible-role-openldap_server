@@ -3,6 +3,7 @@
 
 use_static_configuration: 'false'
 use_tls: 'false'
+use_ldaps: 'false'
 
 #
 default_add_frontend_acls: 'true'
