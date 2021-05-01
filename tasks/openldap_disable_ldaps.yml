@@ -4,7 +4,7 @@
 - name: 'Disable LDAPS in the sysconfig or default file'
   lineinfile:
     path: "{{ path_to_sysconfig_file }}"
-    regex: '^SLAPD_SERVICES='
-    line: 'SLAPD_SERVICES="ldap:/// ldapi:///"'
+    regex: "^{{ sysconfig_line }}="
+    line: '{{ sysconfig_line }}="ldap:/// ldapi:///"'
   notify:
     - 'Restart the OpenLDAP server service'
