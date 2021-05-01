@@ -90,6 +90,7 @@
       tags:
         - 'configuration'
   when:
+    - 'use_tls | bool'
     - 'use_ldaps | bool'
   tags:
     - 'configuration'
