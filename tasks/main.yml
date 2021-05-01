@@ -72,6 +72,28 @@
   tags:
     - 'configuration'
 
+- name: 'Disable LDAPS via the sysconf or default file'
+  include_tasks:
+    file: openldap_disable_ldaps.yml
+    apply:
+      tags:
+        - 'configuration'
+  when:
+    - 'not use_ldaps | bool'
+  tags:
+    - 'configuration'
+
+- name: 'Enable LDAPS via the sysconf or default file'
+  include_tasks:
+    file: openldap_enable_ldaps.yml
+    apply:
+      tags:
+        - 'configuration'
+  when:
+    - 'use_ldaps | bool'
+  tags:
+    - 'configuration'
+
 - name: 'Force all notified handlers to run at this point, not waiting for normal sync points'
   meta: flush_handlers
   tags:
