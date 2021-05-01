@@ -1,0 +1,10 @@
+---
+# openldap_server/tasks/openldap_disable_ldaps.yml
+
+- name: 'Disable LDAPS in the sysconfig or default file'
+  lineinfile:
+    path: "{{ path_to_sysconfig_file }}"
+    regex: '^SLAPD_SERVICES='
+    line: 'SLAPD_SERVICES="ldap:/// ldapi:///"'
+  notify:
+    - 'Restart the OpenLDAP server service'
