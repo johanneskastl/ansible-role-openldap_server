@@ -87,28 +87,15 @@
     path: '/etc/openldap/slapd.d/cn=config.ldif'
     regex: ^olcTLS|CRC
     state: 'absent'
-  when: 'ansible_os_family == "RedHat" and not use_tls | bool'
+  when:
+    - 'ansible_os_family == "RedHat" and not use_tls | bool'
+    - 'not use_static_configuration | bool'
   tags:
     - 'installation'
 
 #
 # handlers triggered by configuration changes
 #
-- name: 'Fix permissions on database files'
-  file:
-    path: "{{ item }}"
-    owner: "{{ openldap_user }}"
-    group: "{{ openldap_group }}"
-    mode: '0600'
-  loop:
-    - "{{ path_to_openldap_var_directory }}data.mdb"
-    - "{{ path_to_openldap_var_directory }}lock.mdb"
-  ignore_errors: "{{ ansible_check_mode }}"
-  tags:
-    - 'configuration'
-  notify:
-    - 'Restart the OpenLDAP server service'
-
 - name: 'Restart the OpenLDAP server service'
   service:
     name: "{{ openldap_server_service }}"
