@@ -9,6 +9,7 @@
   notify:
     - 'Stop the OpenLDAP server service'
     - 'Remove database files'
+    - 'Use dynamic configuration (on SUSE/openSUSE)'
     - 'Create directories for dynamic configuration'
     - 'Remove slapd.conf if dynamic configuration is used'
     - 'Remove file olcDatabase={2}hdb.ldif'
