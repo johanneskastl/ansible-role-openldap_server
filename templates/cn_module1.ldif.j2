@@ -1,6 +1,6 @@
 dn: cn=module{1}
 objectClass: olcModuleList
 cn: module{1}
-olcModulePath: /usr/lib/ldap
+olcModulePath: {{ path_to_openldap_modules_directory }}
 olcModuleLoad: {0}back_monitor
 structuralObjectClass: olcModuleList
