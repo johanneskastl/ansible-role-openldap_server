@@ -77,6 +77,16 @@
   tags:
     - 'installation'
 
+- name: 'Remove file cn={2}inetorgperson.ldif'
+  file:
+    path: "{{ path_to_openldap_etc_directory }}slapd.d/cn=config/cn=schema/cn={2}inetorgperson.ldif"
+    state: 'absent'
+  when:
+    - 'ansible_os_family == "Suse"'
+    - 'not use_static_configuration | bool'
+  tags:
+    - 'installation'
+
 - name: 'Remove file cn={3}rfc2307bis.ldif'
   file:
     path: "{{ path_to_openldap_etc_directory }}slapd.d/cn=config/cn=schema/cn={3}rfc2307bis.ldif"
