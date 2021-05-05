@@ -1,6 +1,15 @@
 ---
 # openldap_server/handlers/dynamic_configuration.yml
 
+- name: 'Use dynamic configuration (on SUSE/openSUSE)'
+  lineinfile:
+    path: "{{ path_to_sysconfig_file }}"
+    regex: '^OPENLDAP_CONFIG_BACKEND='
+    line: 'OPENLDAP_CONFIG_BACKEND="ldap"'
+  when:
+    - 'ansible_os_family == "Suse"'
+    - 'not use_static_configuration | bool'
+
 - name: 'Create directories for dynamic configuration'
   file:
     path: "{{ item.path }}"
