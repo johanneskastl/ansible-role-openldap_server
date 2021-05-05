@@ -27,6 +27,18 @@
   tags:
     - 'installation'
 
+- name: 'Create directory /var/run/slapd/ (on SUSE/openSUSE)'
+  file:
+    path: "{{ path_to_openldap_run_directory }}"
+    state: 'directory'
+    owner: "{{ openldap_user }}"
+    group: "{{ openldap_group }}"
+    mode: '755'
+  when:
+    - 'not use_static_configuration | bool'
+  tags:
+    - 'installation'
+
 - name: 'Remove slapd.conf if dynamic configuration is used'
   file:
     path: "{{ path_to_openldap_etc_directory }}slapd.conf"
