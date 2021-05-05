@@ -39,6 +39,15 @@
   tags:
     - 'installation'
 
+- name: 'Prepare initial configuration with slaptest (on SUSE/openSUSE)'
+  shell:
+    cmd: 'cd /etc/openldap && slaptest -f slapd.conf.olctemplate -F slapd.d'
+  when:
+    - 'ansible_os_family == "Suse"'
+    - 'not use_static_configuration | bool'
+  tags:
+    - 'installation'
+
 - name: 'Remove slapd.conf if dynamic configuration is used'
   file:
     path: "{{ path_to_openldap_etc_directory }}slapd.conf"
