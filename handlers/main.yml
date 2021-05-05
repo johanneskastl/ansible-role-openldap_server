@@ -26,7 +26,8 @@
   file:
     path: "{{ path_to_openldap_etc_directory }}slapd.d/cn=config/olcDatabase={2}hdb.ldif"
     state: 'absent'
-  when: 'ansible_os_family == "RedHat"'
+  when:
+    - 'ansible_os_family == "RedHat"'
   tags:
     - 'installation'
 
@@ -34,7 +35,8 @@
   file:
     path: "{{ path_to_openldap_etc_directory }}slapd.d/cn=config/olcDatabase={1}mdb.ldif"
     state: 'absent'
-  when: 'ansible_os_family == "Debian"'
+  when:
+    - 'ansible_os_family == "Debian"'
   tags:
     - 'installation'
 
@@ -45,7 +47,8 @@
     owner: "{{ openldap_user }}"
     group: "{{ openldap_group }}"
     mode: '0600'
-  when: 'ansible_os_family == "Debian"'
+  when:
+    - 'ansible_os_family == "Debian"'
   tags:
     - 'installation'
 
@@ -56,7 +59,8 @@
     owner: "{{ openldap_user }}"
     group: "{{ openldap_group }}"
     mode: '0600'
-  when: 'ansible_os_family == "RedHat" or ansible_os_family == "Debian"'
+  when:
+    - 'ansible_os_family == "RedHat" or ansible_os_family == "Debian"'
   tags:
     - 'installation'
 
@@ -67,7 +71,8 @@
     owner: "{{ openldap_user }}"
     group: "{{ openldap_group }}"
     mode: '0600'
-  when: 'ansible_os_family == "RedHat" or ansible_os_family == "Debian"'
+  when:
+    - 'ansible_os_family == "RedHat" or ansible_os_family == "Debian"'
   tags:
     - 'installation'
 
@@ -78,7 +83,8 @@
     owner: "{{ openldap_user }}"
     group: "{{ openldap_group }}"
     mode: '0600'
-  when: 'ansible_os_family == "RedHat" or ansible_os_family == "Debian"'
+  when:
+    - 'ansible_os_family == "RedHat" or ansible_os_family == "Debian"'
   tags:
     - 'installation'
 
