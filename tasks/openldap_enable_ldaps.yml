@@ -1,10 +1,20 @@
 ---
 # openldap_server/tasks/openldap_enable_ldaps.yml
 
-- name: 'Enable LDAPS in the sysconfig or default file'
+- name: 'Enable LDAPS in the sysconfig or default file (Debian/RedHat families)'
   lineinfile:
     path: "{{ path_to_sysconfig_file }}"
     regex: "^{{ sysconfig_line }}="
     line: '{{ sysconfig_line }}="ldap:/// ldaps:/// ldapi:///"'
+  when: 'ansible_os_family == "RedHat" or ansible_os_family == "Debian"'
+  notify:
+    - 'Restart the OpenLDAP server service'
+
+- name: 'Enable LDAPS in the sysconfig or default file (Suse OS family)'
+  lineinfile:
+    path: "{{ path_to_sysconfig_file }}"
+    regex: '^OPENLDAP_START_LDAPS'
+    line: 'OPENLDAP_START_LDAPS="yes"'
+  when: 'ansible_os_family == "Suse"'
   notify:
     - 'Restart the OpenLDAP server service'
