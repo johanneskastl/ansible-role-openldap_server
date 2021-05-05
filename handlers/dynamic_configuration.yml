@@ -10,7 +10,7 @@
     mode: "{{ item.mode }}"
   loop:
     - path: "{{ path_to_openldap_etc_directory }}slapd.d/cn=config/"
-      mode: '0770'
+      mode: '0750'
     - path: "{{ path_to_openldap_etc_directory }}slapd.d/cn=config/cn=schema"
       mode: '0750'
   when:
