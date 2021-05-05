@@ -47,6 +47,18 @@
   tags:
     - 'installation'
 
+- name: 'Create cn=config.ldif'
+  template:
+    src: 'cn_config.ldif.j2'
+    dest: "{{ path_to_openldap_etc_directory }}slapd.d/cn=config.ldif"
+    owner: "{{ openldap_user }}"
+    group: "{{ openldap_group }}"
+    mode: '0600'
+  when:
+    - 'not use_static_configuration | bool'
+  tags:
+    - 'installation'
+
 - name: 'Create cn=module{1}.ldif'
   template:
     src: 'cn_module1.ldif.j2'
@@ -56,6 +68,42 @@
     mode: '0600'
   when:
     - 'ansible_os_family == "Debian"'
+    - 'not use_static_configuration | bool'
+  tags:
+    - 'installation'
+
+- name: 'Create cn=schema.ldif'
+  template:
+    src: 'cn_schema.ldif.j2'
+    dest: "{{ path_to_openldap_etc_directory }}slapd.d/cn=config/cn=schema.ldif"
+    owner: "{{ openldap_user }}"
+    group: "{{ openldap_group }}"
+    mode: '0600'
+  when:
+    - 'not use_static_configuration | bool'
+  tags:
+    - 'installation'
+
+- name: 'Create olcBackend={0}mdb.ldif'
+  template:
+    src: 'olcBackend0mdb.ldif.j2'
+    dest: "{{ path_to_openldap_etc_directory }}slapd.d/cn=config/olcBackend={0}mdb.ldif"
+    owner: "{{ openldap_user }}"
+    group: "{{ openldap_group }}"
+    mode: '0600'
+  when:
+    - 'not use_static_configuration | bool'
+  tags:
+    - 'installation'
+
+- name: 'Create olcDatabase={0}config.ldif'
+  template:
+    src: 'olcDatabase0config.ldif.j2'
+    dest: "{{ path_to_openldap_etc_directory }}slapd.d/cn=config/olcDatabase={0}config.ldif"
+    owner: "{{ openldap_user }}"
+    group: "{{ openldap_group }}"
+    mode: '0600'
+  when:
     - 'not use_static_configuration | bool'
   tags:
     - 'installation'
