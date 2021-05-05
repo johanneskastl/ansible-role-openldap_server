@@ -1,8 +1,8 @@
 dn: cn=config
 objectClass: olcGlobal
 cn: config
-olcArgsFile: /var/run/slapd/slapd.args
+olcArgsFile: {{ path_to_openldap_run_directory }}/slapd.args
 olcLogLevel: none
-olcPidFile: /var/run/slapd/slapd.pid
+olcPidFile: {{ path_to_openldap_run_directory }}/slapd.pid
 olcToolThreads: 1
 structuralObjectClass: olcGlobal
