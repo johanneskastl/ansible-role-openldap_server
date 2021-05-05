@@ -5,6 +5,7 @@
   package:
     name: "{{ openldap_server_packages }}"
     state: 'present'
+  register: install_openldap_server_packages
   notify:
     - 'Stop the OpenLDAP server service'
     - 'Remove database files'
