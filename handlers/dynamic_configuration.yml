@@ -1,6 +1,18 @@
 ---
 # openldap_server/handlers/dynamic_configuration.yml
 
+- name: 'Create directory for dynamic configuration'
+  file:
+    path: "{{ path_to_openldap_etc_directory }}slapd.d/cn=config/"
+    state: 'directory'
+    owner: "{{ openldap_user }}"
+    group: "{{ openldap_group }}"
+    mode: '0770'
+  when:
+    - 'not use_static_configuration | bool'
+  tags:
+    - 'installation'
+
 - name: 'Remove file olcDatabase={2}hdb.ldif'
   file:
     path: "{{ path_to_openldap_etc_directory }}slapd.d/cn=config/olcDatabase={2}hdb.ldif"
