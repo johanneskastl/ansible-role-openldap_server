@@ -13,6 +13,15 @@
   tags:
     - 'installation'
 
+- name: 'Remove slapd.conf if dynamic configuration is used'
+  file:
+    path: "{{ path_to_openldap_etc_directory }}slapd.conf"
+    state: 'absent'
+  when:
+    - 'not use_static_configuration | bool'
+  tags:
+    - 'installation'
+
 - name: 'Remove file olcDatabase={2}hdb.ldif'
   file:
     path: "{{ path_to_openldap_etc_directory }}slapd.d/cn=config/olcDatabase={2}hdb.ldif"
