@@ -14,6 +14,8 @@
     - 'Create directory /var/run/slapd/ (on SUSE/openSUSE)'
     - 'Create directories for dynamic configuration'
     - 'Remove slapd.conf if dynamic configuration is used'
+    - 'Remove file cn={3}rfc2307bis.ldif'
+    - 'Remove file cn={4}yast.ldif'
     - 'Remove file olcDatabase={2}hdb.ldif'
     - 'Remove file olcDatabase={1}mdb.ldif'
     - 'Create cn=config.ldif'
