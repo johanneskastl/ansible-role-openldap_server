@@ -6,5 +6,15 @@
     path: "{{ path_to_sysconfig_file }}"
     regex: "^{{ sysconfig_line }}="
     line: '{{ sysconfig_line }}="ldap:/// ldapi:///"'
+  when: 'ansible_os_family == "RedHat" or ansible_os_family == "Debian"'
+  notify:
+    - 'Restart the OpenLDAP server service'
+
+- name: 'Disable LDAPS in the sysconfig or default file (Suse OS family)'
+  lineinfile:
+    path: "{{ path_to_sysconfig_file }}"
+    regex: '^OPENLDAP_START_LDAPS'
+    line: 'OPENLDAP_START_LDAPS="no"'
+  when: 'ansible_os_family == "Suse"'
   notify:
     - 'Restart the OpenLDAP server service'
