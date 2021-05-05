@@ -76,7 +76,7 @@
     group: "{{ openldap_group }}"
     mode: '0600'
   when:
-    - 'ansible_os_family == "Debian"'
+    - 'ansible_os_family == "Debian" or ansible_os_family == "Suse"'
     - 'not use_static_configuration | bool'
   tags:
     - 'installation'
@@ -89,7 +89,7 @@
     group: "{{ openldap_group }}"
     mode: '0600'
   when:
-    - 'ansible_os_family == "Debian"'
+    - 'ansible_os_family == "Debian" or ansible_os_family == "Suse"'
     - 'not use_static_configuration | bool'
   tags:
     - 'installation'
