@@ -1,13 +1,18 @@
 ---
 # openldap_server/handlers/dynamic_configuration.yml
 
-- name: 'Create directory for dynamic configuration'
+- name: 'Create directories for dynamic configuration'
   file:
-    path: "{{ path_to_openldap_etc_directory }}slapd.d/cn=config/"
+    path: "{{ item.path }}"
     state: 'directory'
     owner: "{{ openldap_user }}"
     group: "{{ openldap_group }}"
-    mode: '0770'
+    mode: "{{ item.mode }}"
+  loop:
+    - path: "{{ path_to_openldap_etc_directory }}slapd.d/cn=config/"
+      mode: '0770'
+    - path: "{{ path_to_openldap_etc_directory }}slapd.d/cn=config/cn=schema"
+      mode: '0750'
   when:
     - 'not use_static_configuration | bool'
   tags:

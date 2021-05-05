@@ -9,7 +9,7 @@
   notify:
     - 'Stop the OpenLDAP server service'
     - 'Remove database files'
-    - 'Create directory for dynamic configuration'
+    - 'Create directories for dynamic configuration'
     - 'Remove slapd.conf if dynamic configuration is used'
     - 'Remove file olcDatabase={2}hdb.ldif'
     - 'Remove file olcDatabase={1}mdb.ldif'
