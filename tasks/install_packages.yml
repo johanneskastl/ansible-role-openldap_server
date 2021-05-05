@@ -18,6 +18,7 @@
     - 'Create cn=module{1}.ldif'
     - 'Create cn=schema.ldif'
     - 'Create olcBackend={0}mdb.ldif'
+    - 'Create olcDatabase={0}config.ldif'
     - 'Create olcDatabase={-1}frontend.ldif'
     - 'Create olcDatabase={1}monitor.ldif'
     - 'Create olcDatabase={2}mdb.ldif'
