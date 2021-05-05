@@ -10,6 +10,12 @@ use_ldaps: 'false'
 # will be set to true by set_fact, if needed
 ignore_errors_additional_packages: 'false'
 
+
+# variable to ignore errors in check mode
+# when modifying the sysconfig file
+# will be set to true by set_fact, if needed
+ignore_errors_sysconfig_file: 'false'
+
 #
 default_add_frontend_acls: 'true'
 default_add_frontend_acls_protect_attrs: 'true'
