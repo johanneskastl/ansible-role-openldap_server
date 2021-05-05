@@ -30,6 +30,11 @@
   when:
     - 'not use_static_configuration | bool'
 
+- name: 'Include handlers for static configuration'
+  import_tasks: static_configuration.yml
+  when:
+    - 'use_static_configuration | bool'
+
 #
 # handlers triggered by configuration changes
 #
