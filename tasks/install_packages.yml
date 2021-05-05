@@ -11,6 +11,7 @@
     - 'Remove database files'
     - 'Use dynamic configuration (on SUSE/openSUSE)'
     - 'Prepare initial configuration with slaptest (on SUSE/openSUSE)'
+    - 'Create directory /var/run/slapd/ (on SUSE/openSUSE)'
     - 'Create directories for dynamic configuration'
     - 'Remove slapd.conf if dynamic configuration is used'
     - 'Remove file olcDatabase={2}hdb.ldif'
