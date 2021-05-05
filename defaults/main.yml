@@ -5,6 +5,11 @@ use_static_configuration: 'false'
 use_tls: 'false'
 use_ldaps: 'false'
 
+# variable to ignore errors in check mode
+# as Ansible's ldap_attrs cannot handle this
+# will be set to true by set_fact, if needed
+ignore_errors_additional_packages: 'false'
+
 #
 default_add_frontend_acls: 'true'
 default_add_frontend_acls_protect_attrs: 'true'
