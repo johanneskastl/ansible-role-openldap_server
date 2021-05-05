@@ -8,7 +8,7 @@ use_ldaps: 'false'
 # variable to ignore errors in check mode
 # as Ansible's ldap_attrs cannot handle this
 # will be set to true by set_fact, if needed
-ignore_errors_additional_packages: 'false'
+ignore_errors_when_packages_would_be_installed: 'false'
 
 
 # variable to ignore errors in check mode

@@ -27,7 +27,7 @@
 
 - name: 'Set fact to ignore errors if additional_packages would be installed, but we are in check mode'
   set_fact:
-     ignore_errors_additional_packages: 'true'
+     ignore_errors_when_packages_would_be_installed: 'true'
   check_mode: 'false'
   when: 'install_additional_packages.changed | bool and ansible_check_mode | bool'
 
