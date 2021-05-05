@@ -59,6 +59,19 @@
   tags:
     - 'installation'
 
+- name: 'Create cn=module{0}.ldif'
+  template:
+    src: 'cn_module0.ldif.j2'
+    dest: "{{ path_to_openldap_etc_directory }}slapd.d/cn=config/cn=module{0}.ldif"
+    owner: "{{ openldap_user }}"
+    group: "{{ openldap_group }}"
+    mode: '0600'
+  when:
+    - 'ansible_os_family == "Debian"'
+    - 'not use_static_configuration | bool'
+  tags:
+    - 'installation'
+
 - name: 'Create cn=module{1}.ldif'
   template:
     src: 'cn_module1.ldif.j2'
