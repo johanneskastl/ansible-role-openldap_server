@@ -30,6 +30,7 @@
     dn: 'olcDatabase={0}config,cn=config'
     name: 'olcRootDN'
     values: 'cn=admin,cn=config'
+  ignore_errors: "{{ ignore_errors_additional_packages }}"
   tags:
     - 'configuration'
 
@@ -45,6 +46,7 @@
     state: 'exact'
   # do not show output when using ansible-playbook --diff
   no_log: 'true'
+  ignore_errors: "{{ ignore_errors_additional_packages }}"
   when: 'password_hash_rootdn is defined'
   tags:
     - 'configuration'
@@ -58,6 +60,7 @@
     dn: 'cn=config'
     name: 'olcLogLevel'
     values: "{{ slapd_loglevel }}"
+  ignore_errors: "{{ ignore_errors_additional_packages }}"
   tags:
     - 'configuration'
 
@@ -70,6 +73,7 @@
     dn: 'olcDatabase={2}mdb,cn=config'
     name: 'olcRootDN'
     values: "{{ root_dn }},{{ base_dn }}"
+  ignore_errors: "{{ ignore_errors_additional_packages }}"
   when: 'password_hash_database_rootdn is defined or password_hash_rootdn is defined'
   tags:
     - 'configuration'
@@ -86,6 +90,7 @@
     state: 'exact'
   # do not show output when using ansible-playbook --diff
   no_log: 'true'
+  ignore_errors: "{{ ignore_errors_additional_packages }}"
   when: 'password_hash_database_rootdn is defined or password_hash_rootdn is defined'
   tags:
     - 'configuration'
@@ -103,6 +108,7 @@
     - '{0}to * by dn.exact=gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth manage by * break'
     - '{1}to dn.exact="" by * read'
     - '{2}to dn.base="cn=Subschema" by * read'
+  ignore_errors: "{{ ignore_errors_additional_packages }}"
   when:
     - 'add_frontend_acls | bool'
   tags:
@@ -116,6 +122,7 @@
   loop:
     - '{3}to attrs=userPassword by self write by anonymous auth by users none'
     - '{4}to attrs=shadowLastChange by self write by * read'
+  ignore_errors: "{{ ignore_errors_additional_packages }}"
   when:
     - 'add_frontend_acls | bool'
     - 'add_frontend_acls_protect_attrs | bool'
@@ -127,6 +134,7 @@
     dn: 'olcDatabase={-1}frontend,cn=config'
     name: 'olcAccess'
     values: '{5}to * by * read'
+  ignore_errors: "{{ ignore_errors_additional_packages }}"
   when:
     - 'add_frontend_acls | bool'
     - 'add_frontend_acls_protect_attrs | bool'
@@ -143,6 +151,7 @@
     name: 'olcAccess'
     values: '{5}to * by * read'
     state: 'absent'
+  ignore_errors: "{{ ignore_errors_additional_packages }}"
   when: '
     not add_frontend_acls | bool
     or not add_frontend_acls_protect_attrs | bool
@@ -160,6 +169,7 @@
   loop:
     - '{4}to attrs=shadowLastChange by self write by * read'
     - '{3}to attrs=userPassword by self write by anonymous auth by users none'
+  ignore_errors: "{{ ignore_errors_additional_packages }}"
   when: '
     not add_frontend_acls | bool
     or not add_frontend_acls_protect_attrs | bool
@@ -177,6 +187,7 @@
     - '{2}to dn.base="cn=Subschema" by * read'
     - '{1}to dn.exact="" by * read'
     - '{0}to * by dn.exact=gidNumber=0+uidNumber=0,cn=peercred,cn=external,cn=auth manage by * break'
+  ignore_errors: "{{ ignore_errors_additional_packages }}"
   when:
     - 'not add_frontend_acls | bool'
   tags:
