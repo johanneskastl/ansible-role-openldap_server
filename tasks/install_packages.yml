@@ -30,7 +30,7 @@
      ignore_errors_when_packages_would_be_installed: 'true'
   check_mode: 'false'
   when:
-    - 'install_additional_packages.changed | bool'
+    - 'install_additional_packages.changed | bool or install_openldap_server_packages.changed | bool'
     - 'ansible_check_mode | bool'
 
 - name: 'Force all notified handlers to run at this point, not waiting for normal sync points'
