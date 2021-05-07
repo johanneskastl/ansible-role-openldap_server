@@ -18,7 +18,7 @@
     line: '{{ sysconfig_line }}="ldap:/// ldaps:/// ldapi:///"'
   ignore_errors: "{{ ignore_errors_sysconfig_file }}"
   when:
-    - 'ansible_os_family == "RedHat" or ansible_os_family == "Debian"'
+    - '(ansible_os_family == "RedHat" and ansible_distribution_major_version == "7") or ansible_os_family == "Debian"'
   notify:
     - 'Restart the OpenLDAP server service'
 
