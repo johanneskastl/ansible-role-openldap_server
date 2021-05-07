@@ -33,7 +33,7 @@
     state: 'directory'
     owner: "{{ openldap_user }}"
     group: "{{ openldap_group }}"
-    mode: '755'
+    mode: '0755'
   when:
     - 'not use_static_configuration | bool'
   tags:
