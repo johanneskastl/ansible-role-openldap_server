@@ -1,0 +1,31 @@
+---
+# openldap_server/vars/vars_RedHat8.yml
+
+# OpenLDAP server packages to be installed
+openldap_server_packages:
+  - 'symas-openldap-servers'
+  - 'symas-openldap-clients'
+
+# additional packages:
+additional_packages:
+  - 'python-ldap'
+
+# OpenLDAP server services
+openldap_server_service: 'slapd'
+
+# path to ldap directories
+path_to_openldap_etc_directory: '/etc/openldap/'
+path_to_openldap_var_directory: '/var/lib/ldap/'
+path_to_openldap_run_directory: '/var/run/openldap/'
+
+# sysconfig file
+path_to_sysconfig_file: '/etc/sysconfig/slapd'
+sysconfig_line: 'SLAPD_URLS'
+
+# path to ldap.conf
+path_to_ldap_conf: '/etc/openldap/ldap.conf'
+
+# OpenLDAP user and group
+openldap_user: 'ldap'
+openldap_group: 'ldap'
+
