@@ -8,7 +8,7 @@ openldap_server_packages:
 
 # additional packages:
 additional_packages:
-  - 'python-ldap'
+  - 'python3-ldap'
 
 # OpenLDAP server services
 openldap_server_service: 'slapd'
