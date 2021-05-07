@@ -1,6 +1,14 @@
 ---
 # openldap_server/tasks/install_packages.yml
 
+- name: 'Add Symas GPG key'
+  rpm_key:
+    key: 'https://repo.symas.com/repo/gpg/RPM-GPG-KEY-symas-com-signing-key'
+    state: 'present'
+  when:
+    - 'ansible_os_family == "RedHat"'
+    - 'ansible_distribution_major_version == "8"'
+
 - name: 'Add Symas package repository on RHEL8/CentOS8'
   yum_repository:
     name: 'symas-rhel8'
