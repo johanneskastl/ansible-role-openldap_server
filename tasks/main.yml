@@ -23,6 +23,18 @@
     - 'installation'
     - 'configuration'
 
+- name: 'Add Symas repository on RHEL8/CentOS8'
+  include_tasks:
+    file: symas_repository_on_RHEL8_CentOS8.yml
+    apply:
+      tags:
+        - 'installation'
+  when:
+    - 'ansible_os_family == "RedHat"'
+    - 'ansible_distribution_major_version == "8"'
+  tags:
+    - 'installation'
+
 - name: 'Install packages'
   include_tasks:
     file: install_packages.yml
