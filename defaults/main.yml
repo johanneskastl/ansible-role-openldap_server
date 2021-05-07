@@ -6,10 +6,14 @@ use_tls: 'false'
 use_ldaps: 'false'
 
 # variable to ignore errors in check mode
+# if the Symas repo would be added in RHEL8
+# will be set to true by set_fact, if needed
+ignore_errors_symas_packages: 'false'
+
+# variable to ignore errors in check mode
 # as Ansible's ldap_attrs cannot handle this
 # will be set to true by set_fact, if needed
 ignore_errors_when_packages_would_be_installed: 'false'
-
 
 # variable to ignore errors in check mode
 # when modifying the sysconfig file
