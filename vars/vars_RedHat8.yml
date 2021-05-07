@@ -19,8 +19,9 @@ path_to_openldap_var_directory: '/var/lib/ldap/'
 path_to_openldap_run_directory: '/var/run/openldap/'
 
 # sysconfig file
-path_to_sysconfig_file: '/etc/sysconfig/slapd'
-sysconfig_line: 'SLAPD_URLS'
+# NOT used by Symas packages on RHEL8/CentOS8
+# path_to_sysconfig_file: ''
+# sysconfig_line: ''
 
 # path to ldap.conf
 path_to_ldap_conf: '/etc/openldap/ldap.conf'
