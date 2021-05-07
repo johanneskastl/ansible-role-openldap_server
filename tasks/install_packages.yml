@@ -6,6 +6,7 @@
     name: "{{ openldap_server_packages }}"
     state: 'present'
   register: install_openldap_server_packages
+  ignore_errors: "{{ ignore_errors_symas_packages | bool }}"
   notify:
     - 'Stop the OpenLDAP server service'
     - 'Remove database files'
