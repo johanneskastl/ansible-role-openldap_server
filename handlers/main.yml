@@ -38,6 +38,10 @@
 #
 # handlers triggered by configuration changes
 #
+- name: 'Trigger systemctl daemon-reload'
+  ansible.builtin.systemd:
+    daemon_reload: 'yes'
+
 - name: 'Restart the OpenLDAP server service'
   service:
     name: "{{ openldap_server_service }}"
