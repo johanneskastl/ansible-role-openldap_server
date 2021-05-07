@@ -1,0 +1,31 @@
+---
+# openldap_server/tasks/install_packages.yml
+
+- name: 'Add Symas GPG key'
+  rpm_key:
+    key: 'https://repo.symas.com/repo/gpg/RPM-GPG-KEY-symas-com-signing-key'
+    state: 'present'
+  when:
+    - 'ansible_os_family == "RedHat"'
+    - 'ansible_distribution_major_version == "8"'
+
+- name: 'Add Symas package repository on RHEL8/CentOS8'
+  yum_repository:
+    name: 'symas-rhel8'
+    description: 'Symas OpenLDAP for Linux RPM repository (RHEL8)'
+    baseurl: 'https://repo.symas.com/repo/rpm/SOFL/rhel8'
+    gpgcakey: 'https://repo.symas.com/repo/gpg/RPM-GPG-KEY-symas-com-signing-key'
+    gpgcheck: 'yes'
+  register: symas_repository_added
+  when:
+    - 'ansible_os_family == "RedHat"'
+    - 'ansible_distribution_major_version == "8"'
+
+- name: 'Set fact to ignore errors if the repository would be added, but we are in check mode'
+  set_fact:
+    ignore_errors_symas_packages: 'true'
+  when:
+    - 'symas_repository_added.changed | bool'
+    - 'ansible_check_mode | bool'
+    - 'ansible_os_family == "RedHat"'
+    - 'ansible_distribution_major_version == "8"'

@@ -8,6 +8,9 @@
     - 'install_openldap_server_packages.changed | bool'
     - 'ansible_check_mode | bool'
 
+#
+# Debian or RHEL7/CentOS7
+#
 - name: 'Enable LDAPS in the sysconfig or default file (Debian/RedHat families)'
   lineinfile:
     path: "{{ path_to_sysconfig_file }}"
@@ -15,10 +18,44 @@
     line: '{{ sysconfig_line }}="ldap:/// ldaps:/// ldapi:///"'
   ignore_errors: "{{ ignore_errors_sysconfig_file }}"
   when:
-    - 'ansible_os_family == "RedHat" or ansible_os_family == "Debian"'
+    - '(ansible_os_family == "RedHat" and ansible_distribution_major_version == "7") or ansible_os_family == "Debian"'
   notify:
     - 'Restart the OpenLDAP server service'
 
+#
+# RHEL8/CentOS8 with Symas packages
+#
+- name: 'Create dropin directory for slapd.service'
+  file:
+    path: '/etc/systemd/system/slapd.service.d'
+    state: 'directory'
+    owner: 'root'
+    group: 'root'
+    mode: '0755'
+  when:
+    - 'ansible_os_family == "RedHat" and ansible_distribution_major_version == "8"'
+  notify:
+    - 'Trigger systemctl daemon-reload'
+    - 'Restart the OpenLDAP server service'
+
+- name: 'Create drop-in file to override start options to disable LDAPS'
+  copy:
+    content: |
+      ExecStart=
+      ExecStart=/usr/sbin/slapd -u ldap -h "ldap:/// ldaps:/// ldapi:///"
+    dest: '/etc/systemd/system/slapd.service.d/override.conf'
+    owner: 'root'
+    group: 'root'
+    mode: '0644'
+  when:
+    - 'ansible_os_family == "RedHat" and ansible_distribution_major_version == "8"'
+  notify:
+    - 'Trigger systemctl daemon-reload'
+    - 'Restart the OpenLDAP server service'
+
+#
+# Suse/openSUSE
+#
 - name: 'Enable LDAPS in the sysconfig or default file (Suse OS family)'
   lineinfile:
     path: "{{ path_to_sysconfig_file }}"
