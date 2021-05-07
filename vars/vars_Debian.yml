@@ -16,6 +16,8 @@ openldap_server_service: 'slapd'
 # path to ldap directories
 path_to_openldap_etc_directory: '/etc/ldap/'
 path_to_openldap_var_directory: '/var/lib/ldap/'
+path_to_openldap_run_directory: '/var/run/slapd'
+path_to_openldap_modules_directory: '/usr/lib/ldap'
 
 # sysconfig file
 path_to_sysconfig_file: '/etc/default/slapd'

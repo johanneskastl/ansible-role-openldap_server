@@ -5,12 +5,26 @@
   package:
     name: "{{ openldap_server_packages }}"
     state: 'present'
+  register: install_openldap_server_packages
   notify:
     - 'Stop the OpenLDAP server service'
     - 'Remove database files'
+    - 'Use dynamic configuration (on SUSE/openSUSE)'
+    - 'Prepare initial configuration with slaptest (on SUSE/openSUSE)'
+    - 'Create directory /var/run/slapd/ (on SUSE/openSUSE)'
+    - 'Create directories for dynamic configuration'
+    - 'Remove slapd.conf if dynamic configuration is used'
+    - 'Remove file cn={2}inetorgperson.ldif'
+    - 'Remove file cn={3}rfc2307bis.ldif'
+    - 'Remove file cn={4}yast.ldif'
     - 'Remove file olcDatabase={2}hdb.ldif'
     - 'Remove file olcDatabase={1}mdb.ldif'
+    - 'Create cn=config.ldif'
+    - 'Create cn=module{0}.ldif'
     - 'Create cn=module{1}.ldif'
+    - 'Create cn=schema.ldif'
+    - 'Create olcBackend={0}mdb.ldif'
+    - 'Create olcDatabase={0}config.ldif'
     - 'Create olcDatabase={-1}frontend.ldif'
     - 'Create olcDatabase={1}monitor.ldif'
     - 'Create olcDatabase={2}mdb.ldif'
@@ -20,6 +34,15 @@
   package:
     name: "{{ additional_packages }}"
     state: 'present'
+  register: install_additional_packages
+
+- name: 'Set fact to ignore errors if additional_packages would be installed, but we are in check mode'
+  set_fact:
+     ignore_errors_when_packages_would_be_installed: 'true'
+  check_mode: 'false'
+  when:
+    - 'install_additional_packages.changed | bool or install_openldap_server_packages.changed | bool'
+    - 'ansible_check_mode | bool'
 
 - name: 'Force all notified handlers to run at this point, not waiting for normal sync points'
   meta: flush_handlers

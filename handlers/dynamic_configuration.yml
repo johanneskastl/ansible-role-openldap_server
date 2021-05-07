@@ -1,0 +1,229 @@
+---
+# openldap_server/handlers/dynamic_configuration.yml
+
+- name: 'Use dynamic configuration (on SUSE/openSUSE)'
+  lineinfile:
+    path: "{{ path_to_sysconfig_file }}"
+    regex: '^OPENLDAP_CONFIG_BACKEND='
+    line: 'OPENLDAP_CONFIG_BACKEND="ldap"'
+  when:
+    - 'ansible_os_family == "Suse"'
+    - 'not use_static_configuration | bool'
+
+- name: 'Create directories for dynamic configuration'
+  file:
+    path: "{{ item.path }}"
+    state: 'directory'
+    owner: "{{ openldap_user }}"
+    group: "{{ openldap_group }}"
+    mode: "{{ item.mode }}"
+  loop:
+    - path: "{{ path_to_openldap_etc_directory }}slapd.d/cn=config/"
+      mode: '0750'
+    - path: "{{ path_to_openldap_etc_directory }}slapd.d/cn=config/cn=schema"
+      mode: '0750'
+  when:
+    - 'not use_static_configuration | bool'
+  tags:
+    - 'installation'
+
+- name: 'Create directory /var/run/slapd/ (on SUSE/openSUSE)'
+  file:
+    path: "{{ path_to_openldap_run_directory }}"
+    state: 'directory'
+    owner: "{{ openldap_user }}"
+    group: "{{ openldap_group }}"
+    mode: '755'
+  when:
+    - 'not use_static_configuration | bool'
+  tags:
+    - 'installation'
+
+- name: 'Prepare initial configuration with slaptest (on SUSE/openSUSE)'
+  shell:
+    cmd: 'cd /etc/openldap && slaptest -f slapd.conf.olctemplate -F slapd.d'
+  when:
+    - 'ansible_os_family == "Suse"'
+    - 'not use_static_configuration | bool'
+  tags:
+    - 'installation'
+
+- name: 'Remove slapd.conf if dynamic configuration is used'
+  file:
+    path: "{{ path_to_openldap_etc_directory }}slapd.conf"
+    state: 'absent'
+  when:
+    - 'not use_static_configuration | bool'
+  tags:
+    - 'installation'
+
+- name: 'Remove file olcDatabase={2}hdb.ldif'
+  file:
+    path: "{{ path_to_openldap_etc_directory }}slapd.d/cn=config/olcDatabase={2}hdb.ldif"
+    state: 'absent'
+  when:
+    - 'ansible_os_family == "RedHat"'
+    - 'not use_static_configuration | bool'
+  tags:
+    - 'installation'
+
+- name: 'Remove file olcDatabase={1}mdb.ldif'
+  file:
+    path: "{{ path_to_openldap_etc_directory }}slapd.d/cn=config/olcDatabase={1}mdb.ldif"
+    state: 'absent'
+  when:
+    - 'ansible_os_family == "Debian"'
+    - 'not use_static_configuration | bool'
+  tags:
+    - 'installation'
+
+- name: 'Remove file cn={2}inetorgperson.ldif'
+  file:
+    path: "{{ path_to_openldap_etc_directory }}slapd.d/cn=config/cn=schema/cn={2}inetorgperson.ldif"
+    state: 'absent'
+  when:
+    - 'ansible_os_family == "Suse"'
+    - 'not use_static_configuration | bool'
+  tags:
+    - 'installation'
+
+- name: 'Remove file cn={3}rfc2307bis.ldif'
+  file:
+    path: "{{ path_to_openldap_etc_directory }}slapd.d/cn=config/cn=schema/cn={3}rfc2307bis.ldif"
+    state: 'absent'
+  when:
+    - 'ansible_os_family == "Suse"'
+    - 'not use_static_configuration | bool'
+  tags:
+    - 'installation'
+
+- name: 'Remove file cn={4}yast.ldif'
+  file:
+    path: "{{ path_to_openldap_etc_directory }}slapd.d/cn=config/cn=schema/cn={4}yast.ldif"
+    state: 'absent'
+  when:
+    - 'ansible_os_family == "Suse"'
+    - 'not use_static_configuration | bool'
+  tags:
+    - 'installation'
+
+- name: 'Create cn=config.ldif'
+  template:
+    src: 'cn_config.ldif.j2'
+    dest: "{{ path_to_openldap_etc_directory }}slapd.d/cn=config.ldif"
+    owner: "{{ openldap_user }}"
+    group: "{{ openldap_group }}"
+    mode: '0600'
+  when:
+    - 'not use_static_configuration | bool'
+  tags:
+    - 'installation'
+
+- name: 'Create cn=module{0}.ldif'
+  template:
+    src: 'cn_module0.ldif.j2'
+    dest: "{{ path_to_openldap_etc_directory }}slapd.d/cn=config/cn=module{0}.ldif"
+    owner: "{{ openldap_user }}"
+    group: "{{ openldap_group }}"
+    mode: '0600'
+  when:
+    - 'ansible_os_family == "Debian" or ansible_os_family == "Suse"'
+    - 'not use_static_configuration | bool'
+  tags:
+    - 'installation'
+
+- name: 'Create cn=module{1}.ldif'
+  template:
+    src: 'cn_module1.ldif.j2'
+    dest: "{{ path_to_openldap_etc_directory }}slapd.d/cn=config/cn=module{1}.ldif"
+    owner: "{{ openldap_user }}"
+    group: "{{ openldap_group }}"
+    mode: '0600'
+  when:
+    - 'ansible_os_family == "Debian" or ansible_os_family == "Suse"'
+    - 'not use_static_configuration | bool'
+  tags:
+    - 'installation'
+
+- name: 'Create cn=schema.ldif'
+  template:
+    src: 'cn_schema.ldif.j2'
+    dest: "{{ path_to_openldap_etc_directory }}slapd.d/cn=config/cn=schema.ldif"
+    owner: "{{ openldap_user }}"
+    group: "{{ openldap_group }}"
+    mode: '0600'
+  when:
+    - 'not use_static_configuration | bool'
+  tags:
+    - 'installation'
+
+- name: 'Create olcBackend={0}mdb.ldif'
+  template:
+    src: 'olcBackend0mdb.ldif.j2'
+    dest: "{{ path_to_openldap_etc_directory }}slapd.d/cn=config/olcBackend={0}mdb.ldif"
+    owner: "{{ openldap_user }}"
+    group: "{{ openldap_group }}"
+    mode: '0600'
+  when:
+    - 'not use_static_configuration | bool'
+  tags:
+    - 'installation'
+
+- name: 'Create olcDatabase={0}config.ldif'
+  template:
+    src: 'olcDatabase0config.ldif.j2'
+    dest: "{{ path_to_openldap_etc_directory }}slapd.d/cn=config/olcDatabase={0}config.ldif"
+    owner: "{{ openldap_user }}"
+    group: "{{ openldap_group }}"
+    mode: '0600'
+  when:
+    - 'not use_static_configuration | bool'
+  tags:
+    - 'installation'
+
+- name: 'Create olcDatabase={-1}frontend.ldif'
+  template:
+    src: 'olcDatabase-1frontend.ldif.j2'
+    dest: "{{ path_to_openldap_etc_directory }}slapd.d/cn=config/olcDatabase={-1}frontend.ldif"
+    owner: "{{ openldap_user }}"
+    group: "{{ openldap_group }}"
+    mode: '0600'
+  when:
+    - 'not use_static_configuration | bool'
+  tags:
+    - 'installation'
+
+- name: 'Create olcDatabase={1}monitor.ldif'
+  template:
+    src: 'olcDatabase1monitor.ldif.j2'
+    dest: "{{ path_to_openldap_etc_directory }}slapd.d/cn=config/olcDatabase={1}monitor.ldif"
+    owner: "{{ openldap_user }}"
+    group: "{{ openldap_group }}"
+    mode: '0600'
+  when:
+    - 'not use_static_configuration | bool'
+  tags:
+    - 'installation'
+
+- name: 'Create olcDatabase={2}mdb.ldif'
+  template:
+    src: 'olcDatabase2mdb.ldif.j2'
+    dest: "{{ path_to_openldap_etc_directory }}slapd.d/cn=config/olcDatabase={2}mdb.ldif"
+    owner: "{{ openldap_user }}"
+    group: "{{ openldap_group }}"
+    mode: '0600'
+  when:
+    - 'not use_static_configuration | bool'
+  tags:
+    - 'installation'
+
+- name: 'Remove TLS settings from cn=config.ldif'
+  lineinfile:
+    path: '/etc/openldap/slapd.d/cn=config.ldif'
+    regex: ^olcTLS|CRC
+    state: 'absent'
+  when:
+    - 'ansible_os_family == "RedHat" and not use_tls | bool'
+    - 'not use_static_configuration | bool'
+  tags:
+    - 'installation'

@@ -1,14 +1,14 @@
 ---
-# openldap_server/vars/vars_RedHat.yml
+# openldap_server/vars/vars_SLES15.yml
 
 # OpenLDAP server packages to be installed
 openldap_server_packages:
-  - 'openldap-servers'
-  - 'openldap-clients'
+  - 'openldap2'
+  - 'openldap2-client'
 
 # additional packages:
 additional_packages:
-  - 'python-ldap'
+  - 'python3-ldap'
 
 # OpenLDAP server services
 openldap_server_service: 'slapd'
@@ -16,11 +16,12 @@ openldap_server_service: 'slapd'
 # path to ldap directories
 path_to_openldap_etc_directory: '/etc/openldap/'
 path_to_openldap_var_directory: '/var/lib/ldap/'
-path_to_openldap_run_directory: '/var/run/openldap/'
+path_to_openldap_run_directory: '/var/run/slapd/'
+path_to_openldap_modules_directory: '/usr/lib64/openldap/'
 
 # sysconfig file
-path_to_sysconfig_file: '/etc/sysconfig/slapd'
-sysconfig_line: 'SLAPD_URLS'
+path_to_sysconfig_file: '/etc/sysconfig/openldap'
+# sysconfig_line is not needed on SUSE/openSUSE
 
 # path to ldap.conf
 path_to_ldap_conf: '/etc/openldap/ldap.conf'
@@ -28,3 +29,4 @@ path_to_ldap_conf: '/etc/openldap/ldap.conf'
 # OpenLDAP user and group
 openldap_user: 'ldap'
 openldap_group: 'ldap'
+
